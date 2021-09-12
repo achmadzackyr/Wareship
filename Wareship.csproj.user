@@ -5,5 +5,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>Wareship</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>C:\Wareship\Properties\PublishProfiles\wareship - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

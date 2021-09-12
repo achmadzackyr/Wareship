@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sitemanifest>
+  <IisApp path="C:\Wareship\obj\Release\net5.0\PubTmp\Out\" />
+  <dbfullsql path="C:\Wareship\obj\Release\net5.0\PubTmp\EFSQLScripts\Wareship.Authentication.ApplicationDbContext.sql" />
+</sitemanifest>

@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Wareship.Model.User;
+using Wareship.Model.Products;
+using Wareship.Model.Stocks;
+using Wareship.Model.Transactions;
+using Wareship.Model.Users;
 
 namespace Wareship.Authentication
 {
@@ -21,8 +24,142 @@ namespace Wareship.Authentication
             this.SeedUserStatus(builder);
             this.SeedUserTier(builder);
             this.SeedRoles(builder);
+            this.SeedProductStatus(builder);
+            this.SeedCategory(builder);
+            this.SeedSubCategory(builder);
+            this.SeedWarehouse(builder);
+            this.SeedVariation(builder);
+            this.SeedOption(builder);
+            this.SeedCourier(builder);
+            this.SeedDeliveryService(builder);
+            this.SeedTransactionStatus(builder);
+            this.SeedPayment(builder);
+            this.SeedShipper(builder);
+            this.SeedConsignee(builder);
+
             this.SeedUsers(builder);
             this.SeedUserRoles(builder);
+            this.SeedProduct(builder);
+            this.SeedStock(builder);
+            this.SeedTransaction(builder);
+            this.SeedOrder(builder);
+            this.SeedUserTransaction(builder);
+        }
+
+        private void SeedUserTransaction(ModelBuilder builder)
+        {
+            builder.Entity<Transaction>()
+            .HasOne(p => p.User)
+            .WithMany(b => b.Transactions);
+        }
+
+        private void SeedOrder(ModelBuilder builder)
+        {
+        }
+
+        private void SeedTransaction(ModelBuilder builder)
+        {
+            builder.Entity<Order>()
+            .HasOne(p => p.Transaction)
+            .WithMany(b => b.Orders);
+        }
+
+        private void SeedShipper(ModelBuilder builder)
+        {
+            builder.Entity<Transaction>()
+            .HasOne(p => p.Shipper)
+            .WithMany(b => b.Transactions);
+        }
+
+        private void SeedConsignee(ModelBuilder builder)
+        {
+            builder.Entity<Transaction>()
+            .HasOne(p => p.Consignee)
+            .WithMany(b => b.Transactions);
+        }
+
+        private void SeedPayment(ModelBuilder builder)
+        {
+            builder.Entity<Transaction>()
+            .HasOne(p => p.Payment)
+            .WithMany(b => b.Transactions);
+        }
+
+        private void SeedTransactionStatus(ModelBuilder builder)
+        {
+            builder.Entity<Transaction>()
+            .HasOne(p => p.TransactionStatus)
+            .WithMany(b => b.Transactions);
+        }
+
+        private void SeedDeliveryService(ModelBuilder builder)
+        {
+            builder.Entity<Transaction>()
+            .HasOne(p => p.DeliveryService)
+            .WithMany(b => b.Transactions);
+        }
+
+        private void SeedCourier(ModelBuilder builder)
+        {
+            builder.Entity<DeliveryService>()
+            .HasOne(p => p.Courier)
+            .WithMany(b => b.DeliveryServices);
+        }
+
+        private void SeedStock(ModelBuilder builder)
+        {
+            builder.Entity<Order>()
+            .HasOne(p => p.Stock)
+            .WithMany(b => b.Orders);
+        }
+
+        private void SeedWarehouse(ModelBuilder builder)
+        {
+            builder.Entity<Stock>()
+            .HasOne(p => p.Warehouse)
+            .WithMany(b => b.Stocks);
+        }
+
+        private void SeedOption(ModelBuilder builder)
+        {
+            builder.Entity<Stock>()
+            .HasOne(p => p.Option)
+            .WithMany(b => b.Stocks);
+        }
+
+        private void SeedVariation(ModelBuilder builder)
+        {
+            builder.Entity<Option>()
+            .HasOne(p => p.Variation)
+            .WithMany(b => b.Options);
+        }
+
+        private void SeedProduct(ModelBuilder builder)
+        {
+            builder.Entity<ProductImage>()
+            .HasOne(p => p.Product)
+            .WithMany(b => b.ProductImages);
+        }
+
+        private void SeedProductStatus(ModelBuilder builder)
+        {
+            builder.Entity<Product>()
+            .HasOne(p => p.ProductStatus)
+            .WithMany(b => b.Products);
+        }
+
+        private void SeedCategory(ModelBuilder builder)
+        {
+            builder.Entity<SubCategory>()
+            .HasOne(p => p.Category)
+            .WithMany(b => b.SubCategories);
+        }
+
+        private void SeedSubCategory(ModelBuilder builder)
+        {
+            builder.Entity<Product>()
+            .HasOne(p => p.ProductStatus)
+            .WithMany(b => b.Products);
         }
 
         private void SeedUserStatus(ModelBuilder builder)
@@ -54,6 +191,10 @@ namespace Wareship.Authentication
 
         private void SeedUsers(ModelBuilder builder)
         {
+            builder.Entity<Product>()
+            .HasOne(p => p.User)
+            .WithMany(b => b.Products);
+
             var hasher = new PasswordHasher<ApplicationUser>();
 
             builder.Entity<ApplicationUser>().HasData(

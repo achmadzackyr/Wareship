@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACi1dDaYNOkahF/07zihNiQAAAAACAAAAAAAQZgAAAAEAACAAAABFN6j7+oNwc1sarBK5O3bRewI8mqsLnjpjm5mxDkpc+gAAAAAOgAAAAAIAACAAAACt9PcSKhnAWy+Nk/FgEB2PMvQy3iX5rw2kqvHnOkaw2IAAAACX05cCddkop+BGSPYCCU/DQHYpbG7kkQnaCE8v1hwkP/6nIk6XiqP+ipbZaHpVXBRIsDR/YSZhtKzwe77bad2pcxDo/+U6hTSFnmLwfeJWjHvHGkcfzTBs7WRu+jdx8ZW58stG9zdMHS1czuKm2jF1TjgOA13xBt/3A6NFQViWwkAAAACbt07BTXN/dNctug3HzfP/jVyXXKxD6wiMpGIfy0FJ7HYXNJtMgOfia6KiCvhEOt7nhe2InAOPXc9F0p8FTOwc</EncryptedPassword>
+    <History>True|2021-09-09T16:22:39.4709659Z;False|2021-09-09T23:03:10.7746980+07:00;True|2021-09-09T11:05:08.6053508+07:00;</History>
+  </PropertyGroup>
+  <ItemGroup>
+    <EFMigrations Include="Wareship.Authentication.ApplicationDbContext">
+      <Value>Data Source=tcp:wareship.database.windows.net,1433%3bInitial Catalog=wareship%3bUser Id=wareship%40wareship%3bPassword=Triomitrasolusi123!</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

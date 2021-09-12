@@ -246,6 +246,9 @@ namespace Wareship.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -280,6 +283,9 @@ namespace Wareship.Migrations
                     b.Property<int>("UserTierId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -302,21 +308,22 @@ namespace Wareship.Migrations
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
                             City = "Kabupaten Ciamis",
-                            ConcurrencyStamp = "ec8f7902-cff4-4efe-8f1c-3524ac0fe9e8",
-                            CreatedAt = new DateTime(2021, 9, 8, 20, 14, 36, 778, DateTimeKind.Local).AddTicks(5891),
+                            ConcurrencyStamp = "5d7c9c24-2291-4855-aed0-9ad2b8129ea7",
+                            CreatedAt = new DateTime(2021, 9, 12, 17, 59, 18, 83, DateTimeKind.Local).AddTicks(6688),
                             Dob = new DateTime(1989, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@example.com",
                             EmailConfirmed = false,
                             Gender = "Laki-Laki",
                             LockoutEnabled = false,
                             Name = "Admin Suradmin",
+                            NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEH0jDn03VbPBhaU2hmu7W7Gu14HLcbbMipm31aAnVpsFAbgUfq0zzd4NOTFgGgirzA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEP+NbK9rdwrM8a7oG1hKlUqso9gCEf7R+g+lrwVTxPTJAIb/PuhF3nwqySoY7XyVmg==",
                             PhoneNumber = "085223670378",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             Province = "Jawa Barat",
-                            SecurityStamp = "5ae82641-cd1e-4fb9-8647-120fc2a03dd3",
+                            SecurityStamp = "bca923cb-bcc2-422b-a197-ba8db30aa006",
                             Street = "Dusun Desa, Desa Cijeungjing",
                             Subdistrict = "Cijeungjing",
                             TwoFactorEnabled = false,
@@ -329,21 +336,22 @@ namespace Wareship.Migrations
                             Id = "supplier-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
                             City = "Kabupaten Ciamis",
-                            ConcurrencyStamp = "0e7d6c70-2ac2-4c31-aef6-cc5b925f80bd",
-                            CreatedAt = new DateTime(2021, 9, 8, 20, 14, 36, 809, DateTimeKind.Local).AddTicks(3084),
+                            ConcurrencyStamp = "362594e5-7ae2-43aa-9073-97517bd72879",
+                            CreatedAt = new DateTime(2021, 9, 12, 17, 59, 18, 97, DateTimeKind.Local).AddTicks(878),
                             Dob = new DateTime(1989, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "supplier@example.com",
                             EmailConfirmed = false,
                             Gender = "Laki-Laki",
                             LockoutEnabled = false,
                             Name = "Susu Plier",
+                            NormalizedEmail = "SUPPLIER@EXAMPLE.COM",
                             NormalizedUserName = "SUPPLIER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBzhs+w+w5vpYueAX+hewJoqo+hT523uQhQSgXZ+jVETDZgiqOAMIdPsH8Ud8+0x+Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDq+Z1Hp+XXw2eYsey3Bc5Gjn3XIUqTNYnQ4PB5Zxyz1EdkuYgO7qnVUhWYCZtM7BQ==",
                             PhoneNumber = "085223670378",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             Province = "Jawa Barat",
-                            SecurityStamp = "2c06b3ca-f0fa-4f53-b249-89f54e1c881d",
+                            SecurityStamp = "e8154c6c-b7c5-4235-a3c4-a16d876567cb",
                             Street = "Dusun Desa, Desa Cijeungjing",
                             Subdistrict = "Cijeungjing",
                             TwoFactorEnabled = false,
@@ -353,7 +361,490 @@ namespace Wareship.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Wareship.Model.User.UserStatus", b =>
+            modelBuilder.Entity("Wareship.Model.Products.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IsTrash")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Products.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Sku")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SubCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Volume")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Weight")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductStatusId");
+
+                    b.HasIndex("SubCategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Products.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImage");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Products.ProductStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductStatus");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Products.SubCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IsTrash")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("SubCategory");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Stocks.Option", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VariationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VariationId");
+
+                    b.ToTable("Option");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Stocks.Stock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IsTrash")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OptionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Sku")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OptionId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("Stock");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Stocks.Variation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Variation");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Stocks.Warehouse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Jalan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("KabupatenKota")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Kecamatan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Provinsi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Warehouse");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Consignee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Province")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subdistrict")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Consignee");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Courier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Courier");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.DeliveryService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CourierId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourierId");
+
+                    b.ToTable("DeliveryService");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StockId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StockId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Payment");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Shipper", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Province")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subdistrict")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Shipper");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Airwaybill")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ConsigneeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DeliveryServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IsTrash")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShipperId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TotalDiscount")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalFee")
+                        .HasColumnType("float");
+
+                    b.Property<int>("TotalItem")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalShipping")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalTax")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalVolume")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalWeight")
+                        .HasColumnType("float");
+
+                    b.Property<int>("TransactionStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsigneeId");
+
+                    b.HasIndex("DeliveryServiceId");
+
+                    b.HasIndex("PaymentId");
+
+                    b.HasIndex("ShipperId");
+
+                    b.HasIndex("TransactionStatusId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Transaction");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.TransactionStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TransactionStatus");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Users.UserStatus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -385,7 +876,7 @@ namespace Wareship.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Wareship.Model.User.UserTier", b =>
+            modelBuilder.Entity("Wareship.Model.Users.UserTier", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -475,13 +966,13 @@ namespace Wareship.Migrations
 
             modelBuilder.Entity("Wareship.Authentication.ApplicationUser", b =>
                 {
-                    b.HasOne("Wareship.Model.User.UserStatus", "UserStatus")
+                    b.HasOne("Wareship.Model.Users.UserStatus", "UserStatus")
                         .WithMany("Users")
                         .HasForeignKey("UserStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Wareship.Model.User.UserTier", "UserTier")
+                    b.HasOne("Wareship.Model.Users.UserTier", "UserTier")
                         .WithMany("Users")
                         .HasForeignKey("UserTierId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -492,12 +983,255 @@ namespace Wareship.Migrations
                     b.Navigation("UserTier");
                 });
 
-            modelBuilder.Entity("Wareship.Model.User.UserStatus", b =>
+            modelBuilder.Entity("Wareship.Model.Products.Product", b =>
+                {
+                    b.HasOne("Wareship.Model.Products.ProductStatus", "ProductStatus")
+                        .WithMany("Products")
+                        .HasForeignKey("ProductStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wareship.Model.Products.SubCategory", "SubCategory")
+                        .WithMany()
+                        .HasForeignKey("SubCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wareship.Authentication.ApplicationUser", "User")
+                        .WithMany("Products")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("ProductStatus");
+
+                    b.Navigation("SubCategory");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Products.ProductImage", b =>
+                {
+                    b.HasOne("Wareship.Model.Products.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Products.SubCategory", b =>
+                {
+                    b.HasOne("Wareship.Model.Products.Category", "Category")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Stocks.Option", b =>
+                {
+                    b.HasOne("Wareship.Model.Stocks.Variation", "Variation")
+                        .WithMany("Options")
+                        .HasForeignKey("VariationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Variation");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Stocks.Stock", b =>
+                {
+                    b.HasOne("Wareship.Model.Stocks.Option", "Option")
+                        .WithMany("Stocks")
+                        .HasForeignKey("OptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wareship.Model.Products.Product", "Product")
+                        .WithMany("Stocks")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wareship.Model.Stocks.Warehouse", "Warehouse")
+                        .WithMany("Stocks")
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Option");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Warehouse");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.DeliveryService", b =>
+                {
+                    b.HasOne("Wareship.Model.Transactions.Courier", "Courier")
+                        .WithMany("DeliveryServices")
+                        .HasForeignKey("CourierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Courier");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Order", b =>
+                {
+                    b.HasOne("Wareship.Model.Stocks.Stock", "Stock")
+                        .WithMany("Orders")
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wareship.Model.Transactions.Transaction", "Transaction")
+                        .WithMany("Orders")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Stock");
+
+                    b.Navigation("Transaction");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Transaction", b =>
+                {
+                    b.HasOne("Wareship.Model.Transactions.Consignee", "Consignee")
+                        .WithMany("Transactions")
+                        .HasForeignKey("ConsigneeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wareship.Model.Transactions.DeliveryService", "DeliveryService")
+                        .WithMany("Transactions")
+                        .HasForeignKey("DeliveryServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wareship.Model.Transactions.Payment", "Payment")
+                        .WithMany("Transactions")
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wareship.Model.Transactions.Shipper", "Shipper")
+                        .WithMany("Transactions")
+                        .HasForeignKey("ShipperId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wareship.Model.Transactions.TransactionStatus", "TransactionStatus")
+                        .WithMany("Transactions")
+                        .HasForeignKey("TransactionStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wareship.Authentication.ApplicationUser", "User")
+                        .WithMany("Transactions")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Consignee");
+
+                    b.Navigation("DeliveryService");
+
+                    b.Navigation("Payment");
+
+                    b.Navigation("Shipper");
+
+                    b.Navigation("TransactionStatus");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Wareship.Authentication.ApplicationUser", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Products.Category", b =>
+                {
+                    b.Navigation("SubCategories");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Products.Product", b =>
+                {
+                    b.Navigation("ProductImages");
+
+                    b.Navigation("Stocks");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Products.ProductStatus", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Stocks.Option", b =>
+                {
+                    b.Navigation("Stocks");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Stocks.Stock", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Stocks.Variation", b =>
+                {
+                    b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Stocks.Warehouse", b =>
+                {
+                    b.Navigation("Stocks");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Consignee", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Courier", b =>
+                {
+                    b.Navigation("DeliveryServices");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.DeliveryService", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Payment", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Shipper", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.Transaction", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Transactions.TransactionStatus", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Users.UserStatus", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Wareship.Model.User.UserTier", b =>
+            modelBuilder.Entity("Wareship.Model.Users.UserTier", b =>
                 {
                     b.Navigation("Users");
                 });

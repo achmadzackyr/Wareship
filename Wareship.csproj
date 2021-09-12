@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>0b43d3bb-2b0e-4007-8647-dffd14406e99</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
     <Folder Include="ViewModel\Product\" />
   </ItemGroup>
 
