@@ -415,5 +415,8 @@ namespace Wareship.Authentication
         public DbSet<Wareship.Model.Products.Category> Category { get; set; }
 
         public DbSet<Wareship.Model.Products.SubCategory> SubCategory { get; set; }
+
+        public DbSet<Wareship.Model.Products.Product> Product { get; set; }
+        public DbSet<Wareship.Model.Products.ProductImage> ProductImage { get; set; }
     }
 }
