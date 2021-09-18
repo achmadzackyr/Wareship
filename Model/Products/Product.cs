@@ -16,6 +16,7 @@ namespace Wareship.Model.Products
         public double Price { get; set; }
         public double Weight { get; set; }
         public double Volume { get; set; }
+        public double ChargeableWeight { get; set; }
 
         //Relationship
         public string UserId { get; set; }

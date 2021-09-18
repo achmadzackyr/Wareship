@@ -308,8 +308,8 @@ namespace Wareship.Migrations
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
                             City = "Kabupaten Ciamis",
-                            ConcurrencyStamp = "5d7c9c24-2291-4855-aed0-9ad2b8129ea7",
-                            CreatedAt = new DateTime(2021, 9, 12, 17, 59, 18, 83, DateTimeKind.Local).AddTicks(6688),
+                            ConcurrencyStamp = "1cb7ecdb-826b-4523-a30d-237d8aa93f5f",
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 0, 993, DateTimeKind.Local).AddTicks(1823),
                             Dob = new DateTime(1989, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@example.com",
                             EmailConfirmed = false,
@@ -318,12 +318,12 @@ namespace Wareship.Migrations
                             Name = "Admin Suradmin",
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEP+NbK9rdwrM8a7oG1hKlUqso9gCEf7R+g+lrwVTxPTJAIb/PuhF3nwqySoY7XyVmg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBPDYtnPrGDW7n6CgTTwKsWhjQ2Fyq6AGGFn4o0nBQjk4dwQAAdLsaV74hFhN1jBPg==",
                             PhoneNumber = "085223670378",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             Province = "Jawa Barat",
-                            SecurityStamp = "bca923cb-bcc2-422b-a197-ba8db30aa006",
+                            SecurityStamp = "c7cd069e-9e90-46f5-b324-81ab099ce9c7",
                             Street = "Dusun Desa, Desa Cijeungjing",
                             Subdistrict = "Cijeungjing",
                             TwoFactorEnabled = false,
@@ -336,8 +336,8 @@ namespace Wareship.Migrations
                             Id = "supplier-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
                             City = "Kabupaten Ciamis",
-                            ConcurrencyStamp = "362594e5-7ae2-43aa-9073-97517bd72879",
-                            CreatedAt = new DateTime(2021, 9, 12, 17, 59, 18, 97, DateTimeKind.Local).AddTicks(878),
+                            ConcurrencyStamp = "41da727f-050c-4e3a-b499-456a8191b570",
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 21, DateTimeKind.Local).AddTicks(4818),
                             Dob = new DateTime(1989, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "supplier@example.com",
                             EmailConfirmed = false,
@@ -346,12 +346,12 @@ namespace Wareship.Migrations
                             Name = "Susu Plier",
                             NormalizedEmail = "SUPPLIER@EXAMPLE.COM",
                             NormalizedUserName = "SUPPLIER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDq+Z1Hp+XXw2eYsey3Bc5Gjn3XIUqTNYnQ4PB5Zxyz1EdkuYgO7qnVUhWYCZtM7BQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGJiq2W1E37gGMbJIHAXxhjRmRMJQLHs8M8X/YFhAbqK7rZUYDozHQUPYMxzypi3nA==",
                             PhoneNumber = "085223670378",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             Province = "Jawa Barat",
-                            SecurityStamp = "e8154c6c-b7c5-4235-a3c4-a16d876567cb",
+                            SecurityStamp = "1d5ae92e-ec53-49e3-bc98-78cf76611ac1",
                             Street = "Dusun Desa, Desa Cijeungjing",
                             Subdistrict = "Cijeungjing",
                             TwoFactorEnabled = false,
@@ -380,6 +380,68 @@ namespace Wareship.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsTrash = 0,
+                            Name = "Buku"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsTrash = 0,
+                            Name = "Dapur"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsTrash = 0,
+                            Name = "Elektronik"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsTrash = 0,
+                            Name = "Fashion Anak & Bayi"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsTrash = 0,
+                            Name = "Fashion Muslim"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsTrash = 0,
+                            Name = "Fashion Pria"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsTrash = 0,
+                            Name = "Fashion Wanita"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsTrash = 0,
+                            Name = "Film & Musik"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IsTrash = 0,
+                            Name = "Gaming"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IsTrash = 0,
+                            Name = "Handphone & Tablet"
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Products.Product", b =>
@@ -388,6 +450,9 @@ namespace Wareship.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("ChargeableWeight")
+                        .HasColumnType("float");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -425,6 +490,148 @@ namespace Wareship.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Product");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ChargeableWeight = 1.0,
+                            Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
+                            Name = "Kamus Bahasa Inggris 1 Juta Kata",
+                            Price = 100000.0,
+                            ProductStatusId = 1,
+                            Sku = "A001",
+                            SubCategoryId = 1,
+                            UserId = "supplier-6340-4840-95c2-db12554843e5",
+                            Volume = 1.0,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ChargeableWeight = 1.0,
+                            Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
+                            Name = "Kamus Bahasa Inggris 1 Juta Kata",
+                            Price = 100000.0,
+                            ProductStatusId = 1,
+                            Sku = "A002",
+                            SubCategoryId = 1,
+                            UserId = "supplier-6340-4840-95c2-db12554843e5",
+                            Volume = 1.0,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ChargeableWeight = 1.0,
+                            Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
+                            Name = "Kamus Bahasa Inggris 1 Juta Kata",
+                            Price = 100000.0,
+                            ProductStatusId = 1,
+                            Sku = "A003",
+                            SubCategoryId = 1,
+                            UserId = "supplier-6340-4840-95c2-db12554843e5",
+                            Volume = 1.0,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ChargeableWeight = 1.0,
+                            Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
+                            Name = "Kamus Bahasa Inggris 1 Juta Kata",
+                            Price = 100000.0,
+                            ProductStatusId = 1,
+                            Sku = "A004",
+                            SubCategoryId = 1,
+                            UserId = "supplier-6340-4840-95c2-db12554843e5",
+                            Volume = 1.0,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ChargeableWeight = 1.0,
+                            Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
+                            Name = "Kamus Bahasa Inggris 1 Juta Kata",
+                            Price = 100000.0,
+                            ProductStatusId = 1,
+                            Sku = "A005",
+                            SubCategoryId = 1,
+                            UserId = "supplier-6340-4840-95c2-db12554843e5",
+                            Volume = 1.0,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ChargeableWeight = 1.0,
+                            Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
+                            Name = "Kamus Bahasa Inggris 1 Juta Kata",
+                            Price = 100000.0,
+                            ProductStatusId = 1,
+                            Sku = "A006",
+                            SubCategoryId = 1,
+                            UserId = "supplier-6340-4840-95c2-db12554843e5",
+                            Volume = 1.0,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ChargeableWeight = 1.0,
+                            Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
+                            Name = "Kamus Bahasa Inggris 1 Juta Kata",
+                            Price = 100000.0,
+                            ProductStatusId = 1,
+                            Sku = "A007",
+                            SubCategoryId = 1,
+                            UserId = "supplier-6340-4840-95c2-db12554843e5",
+                            Volume = 1.0,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ChargeableWeight = 1.0,
+                            Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
+                            Name = "Kamus Bahasa Inggris 1 Juta Kata",
+                            Price = 100000.0,
+                            ProductStatusId = 1,
+                            Sku = "A008",
+                            SubCategoryId = 1,
+                            UserId = "supplier-6340-4840-95c2-db12554843e5",
+                            Volume = 1.0,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ChargeableWeight = 1.0,
+                            Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
+                            Name = "Kamus Bahasa Inggris 1 Juta Kata",
+                            Price = 100000.0,
+                            ProductStatusId = 1,
+                            Sku = "A009",
+                            SubCategoryId = 1,
+                            UserId = "supplier-6340-4840-95c2-db12554843e5",
+                            Volume = 1.0,
+                            Weight = 1.0
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ChargeableWeight = 1.0,
+                            Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
+                            Name = "Kamus Bahasa Inggris 1 Juta Kata",
+                            Price = 100000.0,
+                            ProductStatusId = 1,
+                            Sku = "A0010",
+                            SubCategoryId = 1,
+                            UserId = "supplier-6340-4840-95c2-db12554843e5",
+                            Volume = 1.0,
+                            Weight = 1.0
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Products.ProductImage", b =>
@@ -448,6 +655,78 @@ namespace Wareship.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductImage");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(6842),
+                            ProductId = 1,
+                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9516),
+                            ProductId = 2,
+                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9534),
+                            ProductId = 3,
+                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9537),
+                            ProductId = 4,
+                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9539),
+                            ProductId = 5,
+                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9549),
+                            ProductId = 6,
+                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9552),
+                            ProductId = 7,
+                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9554),
+                            ProductId = 8,
+                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9557),
+                            ProductId = 9,
+                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9561),
+                            ProductId = 10,
+                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Products.ProductStatus", b =>
@@ -463,6 +742,23 @@ namespace Wareship.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductStatus");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Active"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Banned"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Deleted"
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Products.SubCategory", b =>
@@ -489,6 +785,148 @@ namespace Wareship.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("SubCategory");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            IsTrash = 0,
+                            Name = "Kamus"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            IsTrash = 0,
+                            Name = "Religi & Spiritual"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 2,
+                            IsTrash = 0,
+                            Name = "Peralatan Makan & Minum"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 2,
+                            IsTrash = 0,
+                            Name = "Peralatan Masak"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 3,
+                            IsTrash = 0,
+                            Name = "Alat Pendingin Ruangan"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 3,
+                            IsTrash = 0,
+                            Name = "TV & Aksesoris"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 4,
+                            IsTrash = 0,
+                            Name = "Pakaian Anak Laki-Laki"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategoryId = 4,
+                            IsTrash = 0,
+                            Name = "Pakaian Anak Perempuan"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CategoryId = 5,
+                            IsTrash = 0,
+                            Name = "Jilbab"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CategoryId = 5,
+                            IsTrash = 0,
+                            Name = "Perlengkapan Ibadah"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CategoryId = 6,
+                            IsTrash = 0,
+                            Name = "Batik Pria"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CategoryId = 6,
+                            IsTrash = 0,
+                            Name = "Celana Pria"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CategoryId = 7,
+                            IsTrash = 0,
+                            Name = "Batik Wanita"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CategoryId = 7,
+                            IsTrash = 0,
+                            Name = "Bawahan Wanita"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CategoryId = 8,
+                            IsTrash = 0,
+                            Name = "Film & Serial"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CategoryId = 8,
+                            IsTrash = 0,
+                            Name = "Gitar & Bass"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CategoryId = 9,
+                            IsTrash = 0,
+                            Name = "CD Game"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CategoryId = 9,
+                            IsTrash = 0,
+                            Name = "Game Console"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CategoryId = 10,
+                            IsTrash = 0,
+                            Name = "Handphone"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CategoryId = 10,
+                            IsTrash = 0,
+                            Name = "Tablet"
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Stocks.Option", b =>
@@ -509,6 +947,80 @@ namespace Wareship.Migrations
                     b.HasIndex("VariationId");
 
                     b.ToTable("Option");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "38",
+                            VariationId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "39",
+                            VariationId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "40",
+                            VariationId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "41",
+                            VariationId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "42",
+                            VariationId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "43",
+                            VariationId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Hitam",
+                            VariationId = 2
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Putih",
+                            VariationId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Merah",
+                            VariationId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Biru",
+                            VariationId = 2
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Pink",
+                            VariationId = 2
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Kuning",
+                            VariationId = 2
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Stocks.Stock", b =>
@@ -566,6 +1078,18 @@ namespace Wareship.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Variation");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Ukuran"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Warna"
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Stocks.Warehouse", b =>
@@ -575,13 +1099,7 @@ namespace Wareship.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Jalan")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("KabupatenKota")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Kecamatan")
+                    b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -590,12 +1108,34 @@ namespace Wareship.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Provinsi")
+                    b.Property<string>("Province")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subdistrict")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Warehouse");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "Kota Tasikmalaya",
+                            Name = "Warehouse JNE Tasikmalaya",
+                            Phone = "",
+                            Province = "Jawa Barat",
+                            Street = "Jl. Ir. H. Juanda No.21, RW.1, Cipedes",
+                            Subdistrict = "Cipedes",
+                            ZipCode = "46151"
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Transactions.Consignee", b =>
@@ -650,6 +1190,13 @@ namespace Wareship.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Courier");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "JNE"
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Transactions.DeliveryService", b =>
@@ -670,6 +1217,32 @@ namespace Wareship.Migrations
                     b.HasIndex("CourierId");
 
                     b.ToTable("DeliveryService");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CourierId = 1,
+                            Name = "REG"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CourierId = 1,
+                            Name = "YES"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CourierId = 1,
+                            Name = "OKE"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CourierId = 1,
+                            Name = "JTR"
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Transactions.Order", b =>
@@ -710,6 +1283,23 @@ namespace Wareship.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Payment");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Bank Transfer"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Cash on Delivery"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Paylater"
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Transactions.Shipper", b =>
@@ -842,6 +1432,33 @@ namespace Wareship.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TransactionStatus");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Pending"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Accepted"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Processed"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Delivered"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Cancelled"
+                        });
                 });
 
             modelBuilder.Entity("Wareship.Model.Users.UserStatus", b =>
@@ -992,7 +1609,7 @@ namespace Wareship.Migrations
                         .IsRequired();
 
                     b.HasOne("Wareship.Model.Products.SubCategory", "SubCategory")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1167,6 +1784,11 @@ namespace Wareship.Migrations
                 });
 
             modelBuilder.Entity("Wareship.Model.Products.ProductStatus", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Wareship.Model.Products.SubCategory", b =>
                 {
                     b.Navigation("Products");
                 });
