@@ -8,8 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wareship.Authentication;
 using Wareship.Model.Products;
+using Wareship.ViewModel.Category;
 using Wareship.ViewModel.Global;
 using Wareship.ViewModel.Product;
+using Wareship.ViewModel.Stock;
+using Wareship.ViewModel.Warehouse;
 
 namespace Wareship.Controllers
 {
@@ -29,7 +32,8 @@ namespace Wareship.Controllers
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
 
-            var productList = await _context.Product.ToListAsync();
+            //var productList = await _context.Product.ToListAsync();
+            var productList = await _context.Product.Include(p => p.ProductImages).ToListAsync();
             var productDTOList = productList.Select(p => new ProductDTO
             {
                 Id = p.Id,
@@ -42,47 +46,100 @@ namespace Wareship.Controllers
                 Weight = p.Weight,
                 UserId = p.UserId,
                 ProductStatusId = p.ProductStatusId,
-                SubCategoryId = p.SubCategoryId,
-                ProductImages = GetProductImage(p.Id)
+                ProductImages = p.ProductImages.Select(p => new ProductImageDTO
+                {
+                    Id = p.Id,
+                    Url = p.Url,
+                    ProductId = p.ProductId,
+                    CreatedAt = p.CreatedAt
+                }).ToList()
             }).ToList();
 
             var response = GenerateListResponse(StatusCodes.Status200OK, "Success", productDTOList);
             return Ok(response);
         }
 
-        private List<ProductImageDTO> GetProductImage(int productId)
+        private List<StockDTO> GetProductStock(int productId)
         {
-            var productImageList = _context.ProductImage
+            var productStockList = _context.Stock
                 .Where(p => p.ProductId == productId)
-                .Select(p => new ProductImageDTO
+                .Select(p => new StockDTO
                 {
                     Id = p.Id,
-                    Url = p.Url,
+                    Sku = p.Sku,
+                    Quantity = p.Quantity,
                     ProductId = p.ProductId,
                     CreatedAt = p.CreatedAt
+                    //Option = GetProductOption(p.OptionId),
+                    //Warehouse = GetProductWarehouse(p.WarehouseId),
                 })
                 .ToList();
-            return productImageList;
+            return productStockList;
+        }
+
+        private WarehouseDTO GetProductWarehouse(int warehouseId)
+        {
+            var warehouse = _context.Warehouse
+                .Where(p => p.Id == warehouseId)
+                .Select(w => new WarehouseDTO
+                {
+                    Id = w.Id,
+                    Name = w.Name,
+                    City = w.City,
+                    Phone = w.Phone,
+                    Province = w.Province,
+                    Street = w.Street,
+                    Subdistrict = w.Subdistrict,
+                    ZipCode = w.ZipCode
+                })
+                .FirstOrDefault();
+            return warehouse;
+        }
+
+        private OptionDTO GetProductOption(int optionId)
+        {
+            var option = _context.Option
+                .Where(p => p.Id == optionId)
+                .Select(p => new OptionDTO
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Variation = GetOptionVariation(p.VariationId)
+                })
+                .FirstOrDefault();
+            return option;
+        }
+
+        private VariationDTO GetOptionVariation(int variationId)
+        {
+            var variation = _context.Variation
+                .Where(p => p.Id == variationId)
+                .Select(p => new VariationDTO
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                })
+                .FirstOrDefault();
+            return variation;
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var p = await _context.Product.FindAsync(id);
+            var p = await _context.Product
+                .Include(p => p.ProductImages)
+                .Include(p => p.Stocks)
+                .Include(p => p.SubCategory)
+                .ThenInclude(s => s.Category)
+                .Where(p => p.Id == id)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync();
 
             if (p == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound, GenerateResponse(StatusCodes.Status404NotFound, "Product Not Found", null));
             }
-
-            var subCat = await _context.SubCategory
-                .Where(s => s.Id == p.SubCategoryId)
-                .FirstOrDefaultAsync();
-
-            var cat = await _context.Category
-                .Where(s => s.Id == subCat.CategoryId)
-                .FirstOrDefaultAsync();
 
             var productDTO = new ProductDTO
             {
@@ -97,10 +154,37 @@ namespace Wareship.Controllers
                 Weight = p.Weight,
                 UserId = p.UserId,
                 ProductStatusId = p.ProductStatusId,
-                SubCategoryId = p.SubCategoryId,
-                ProductImages = GetProductImage(p.Id),
-                CategoryName = cat.Name,
-                SubCategoryName = subCat.Name
+                SubCategory = new SubCategoryDTO
+                {
+                    Id = p.SubCategory.Id,
+                    Name = p.SubCategory.Name,
+                    ThumbnailUrl = p.SubCategory.ThumbnailUrl,
+                    CategoryId = p.SubCategory.CategoryId,
+                    Category = new CategoryDTO
+                    {
+                        Id = p.SubCategory.Category.Id,
+                        Name = p.SubCategory.Category.Name,
+                        ThumbnailUrl = p.SubCategory.Category.ThumbnailUrl
+                    }
+                },
+                ProductImages = p.ProductImages.Select(p => new ProductImageDTO
+                {
+                    Id = p.Id,
+                    Url = p.Url,
+                    ProductId = p.ProductId,
+                    CreatedAt = p.CreatedAt
+                }).ToList(),
+                Stocks = p.Stocks.Select(p => new StockDTO
+                {
+                    Id = p.Id,
+                    Sku = p.Sku,
+                    Quantity = p.Quantity,
+                    ProductId = p.ProductId,
+                    CreatedAt = p.CreatedAt
+                    //Option = GetProductOption(p.OptionId),
+                    //Warehouse = GetProductWarehouse(p.WarehouseId),
+                })
+                .ToList()
             };
 
             var response = GenerateResponse(StatusCodes.Status200OK, "Success", productDTO);
@@ -109,7 +193,7 @@ namespace Wareship.Controllers
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [Authorize(Roles = UserRoles.Admin)]
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, [FromBody] ProductRequest request)
         {
@@ -160,13 +244,16 @@ namespace Wareship.Controllers
                         Url = imgUrl
                     };
 
-                    //_context.Entry(productImage).State = EntityState.Modified;
                     _context.ProductImage.Add(productImage);
                     await _context.SaveChangesAsync();
                 }
                 
 
-                var p = await _context.Product.FindAsync(id);
+                var p = await _context.Product
+                    .Include(p => p.ProductImages)
+                    .Where(p => p.Id == id)
+                    .FirstOrDefaultAsync();
+
                 var subCat = await _context.SubCategory
                     .Where(s => s.Id == p.SubCategoryId)
                     .FirstOrDefaultAsync();
@@ -188,10 +275,13 @@ namespace Wareship.Controllers
                     Weight = p.Weight,
                     UserId = p.UserId,
                     ProductStatusId = p.ProductStatusId,
-                    SubCategoryId = p.SubCategoryId,
-                    ProductImages = GetProductImage(p.Id),
-                    CategoryName = cat.Name,
-                    SubCategoryName = subCat.Name
+                    ProductImages = p.ProductImages.Select(p => new ProductImageDTO
+                    {
+                        Id = p.Id,
+                        Url = p.Url,
+                        ProductId = p.ProductId,
+                        CreatedAt = p.CreatedAt
+                    }).ToList(),
                 };
 
                 return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", productDTO));
@@ -211,31 +301,111 @@ namespace Wareship.Controllers
 
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [Authorize(Roles = UserRoles.Admin)]
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct([FromBody] ProductRequest request)
         {
-            _context.Product.Add(product);
-            await _context.SaveChangesAsync();
+            if (ModelState.IsValid)
+            {
+                var sub = await _context.SubCategory.FindAsync(request.SubCategoryId);
+                if(sub != null)
+                {
+                    var product = new Product
+                    {
+                        Id = request.Id,
+                        Sku = request.Sku,
+                        Name = request.Name,
+                        Description = request.Description,
+                        Price = request.Price,
+                        Weight = request.Weight,
+                        Volume = request.Volume,
+                        ChargeableWeight = request.ChargeableWeight,
+                        UserId = request.UserId,
+                        ProductStatusId = 1,
+                        SubCategoryId = request.SubCategoryId
+                    };
+                    try
+                    {
+                        _context.Product.Add(product);
+                        await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+                        //add new image
+                        foreach (var imgUrl in request.ImageUrl)
+                        {
+                            var productImage = new ProductImage
+                            {
+                                ProductId = product.Id,
+                                CreatedAt = DateTime.Now,
+                                Url = imgUrl
+                            };
+
+                            //_context.Entry(productImage).State = EntityState.Modified;
+                            _context.ProductImage.Add(productImage);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        var productDTO = new ProductDTO
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            ChargeableWeight = product.ChargeableWeight,
+                            Description = product.Description,
+                            Price = product.Price,
+                            PriceString = "Rp" + product.Price.ToString("N0").Replace(',', '.'),
+                            Sku = product.Sku,
+                            Volume = product.Volume,
+                            Weight = product.Weight,
+                            UserId = product.UserId,
+                            ProductStatusId = product.ProductStatusId,
+                            ProductImages = product.ProductImages.Select(p => new ProductImageDTO
+                            {
+                                Id = p.Id,
+                                Url = p.Url,
+                                ProductId = p.ProductId,
+                                CreatedAt = p.CreatedAt
+                            }).ToList(),
+                        };
+
+                        return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", productDTO));
+                    }
+                    catch
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, "Failed to add to database", null));
+                    }
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, "SubCategoryId did not exist", null));
+                }
+
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, GenerateResponse(StatusCodes.Status400BadRequest, "Error", null));
+            }
         }
 
         // DELETE: api/Products/5
-        [Authorize(Roles = UserRoles.Admin)]
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _context.Product.FindAsync(id);
             if (product == null)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status404NotFound, GenerateResponse(StatusCodes.Status404NotFound, "Product Not Found", null));
             }
 
             _context.Product.Remove(product);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            var isSuccess = await _context.SaveChangesAsync();
+            if (isSuccess > 0)
+            {
+                return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", null));
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, "Failed to delete", null));
+            }
         }
 
         private bool ProductExists(int id)

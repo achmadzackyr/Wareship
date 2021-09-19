@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Wareship.ViewModel.Category;
+using Wareship.ViewModel.Stock;
 
 namespace Wareship.ViewModel.Product
 {
@@ -16,12 +18,11 @@ namespace Wareship.ViewModel.Product
         public double Weight { get; set; }
         public double Volume { get; set; }
         public double ChargeableWeight { get; set; }
-        public string CategoryName { get; set; }
-        public string SubCategoryName { get; set; }
         public string UserId { get; set; }
         public int ProductStatusId { get; set; }
-        public int SubCategoryId { get; set; }
+        public SubCategoryDTO SubCategory { get; set; }
         public List<ProductImageDTO> ProductImages { get; set; }
+        public List<StockDTO> Stocks { get; set; }
 
     }
 

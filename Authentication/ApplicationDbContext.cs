@@ -413,10 +413,13 @@ namespace Wareship.Authentication
         }
 
         public DbSet<Wareship.Model.Products.Category> Category { get; set; }
-
         public DbSet<Wareship.Model.Products.SubCategory> SubCategory { get; set; }
-
         public DbSet<Wareship.Model.Products.Product> Product { get; set; }
         public DbSet<Wareship.Model.Products.ProductImage> ProductImage { get; set; }
+        public DbSet<Wareship.Model.Products.ProductStatus> ProductStatus { get; set; }
+        public DbSet<Wareship.Model.Stocks.Warehouse> Warehouse { get; set; }
+        public DbSet<Wareship.Model.Stocks.Stock> Stock { get; set; }
+        public DbSet<Wareship.Model.Stocks.Option> Option { get; set; }
+        public DbSet<Wareship.Model.Stocks.Variation> Variation { get; set; }
     }
 }
