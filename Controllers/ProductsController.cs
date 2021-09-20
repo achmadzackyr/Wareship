@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wareship.Authentication;
 using Wareship.Model.Products;
+using Wareship.Model.Stocks;
+using Wareship.ViewModel.Auth;
 using Wareship.ViewModel.Category;
 using Wareship.ViewModel.Global;
 using Wareship.ViewModel.Product;
@@ -130,11 +132,16 @@ namespace Wareship.Controllers
             var p = await _context.Product
                 .Include(p => p.ProductImages)
                 .Include(p => p.Stocks)
+                .ThenInclude(w => w.Warehouse)
+                .Include(p => p.Stocks)
+                .ThenInclude(o => o.Option)
+                .ThenInclude(v => v.Variation)
                 .Include(p => p.SubCategory)
                 .ThenInclude(s => s.Category)
-                .Where(p => p.Id == id)
+                .Include(p => p.User)
                 .AsSplitQuery()
-                .FirstOrDefaultAsync();
+                .OrderBy(p => p.Id)
+                .SingleAsync(p => p.Id == id);
 
             if (p == null)
             {
@@ -153,6 +160,17 @@ namespace Wareship.Controllers
                 Volume = p.Volume,
                 Weight = p.Weight,
                 UserId = p.UserId,
+                User = new UserDTO
+                {
+                    City = p.User.City,
+                    Name = p.User.Name,
+                    Phone = p.User.Phone,
+                    ProfilePictureUrl = p.User.ProfilePictureUrl,
+                    Province = p.User.Province,
+                    Street = p.User.Street,
+                    Subdistrict = p.User.Subdistrict,
+                    ZipCode = p.User.ZipCode
+                },
                 ProductStatusId = p.ProductStatusId,
                 SubCategory = new SubCategoryDTO
                 {
@@ -180,9 +198,29 @@ namespace Wareship.Controllers
                     Sku = p.Sku,
                     Quantity = p.Quantity,
                     ProductId = p.ProductId,
-                    CreatedAt = p.CreatedAt
-                    //Option = GetProductOption(p.OptionId),
-                    //Warehouse = GetProductWarehouse(p.WarehouseId),
+                    CreatedAt = p.CreatedAt,
+                    Option = new OptionDTO
+                    {
+                        Id = p.Option.Id,
+                        Name = p.Option.Name,
+                        Variation = new VariationDTO
+                        {
+                            Id = p.Option.Variation.Id,
+                            Name = p.Option.Variation.Name
+                        }
+                    },
+                    WarehouseId = p.Warehouse.Id,
+                    Warehouse = new WarehouseDTO
+                    {
+                        Id = p.Warehouse.Id,
+                        Name = p.Warehouse.Name,
+                        City = p.Warehouse.City,
+                        Subdistrict = p.Warehouse.Subdistrict,
+                        Phone = p.Warehouse.Phone,
+                        Province = p.Warehouse.Province,
+                        Street = p.Warehouse.Street,
+                        ZipCode = p.Warehouse.ZipCode
+                    }
                 })
                 .ToList()
             };
@@ -344,6 +382,24 @@ namespace Wareship.Controllers
                             await _context.SaveChangesAsync();
                         }
 
+                        //add stock
+                        foreach (var s in request.Stocks)
+                        {
+                            var stock = new Stock
+                            {
+                                Sku = s.Sku,
+                                Quantity = s.Quantity,
+                                ProductId = product.Id,
+                                OptionId = s.OptionId,
+                                WarehouseId = s.WarehouseId,
+                                CreatedAt = DateTime.Now,
+                                IsTrash = 0
+                            };
+
+                            _context.Stock.Add(stock);
+                            await _context.SaveChangesAsync();
+                        }
+
                         var productDTO = new ProductDTO
                         {
                             Id = product.Id,
@@ -363,6 +419,17 @@ namespace Wareship.Controllers
                                 Url = p.Url,
                                 ProductId = p.ProductId,
                                 CreatedAt = p.CreatedAt
+                            }).ToList(),
+                            Stocks = product.Stocks.Select(s => new StockDTO
+                            {
+                                Id = s.Id,
+                                Sku = s.Sku,
+                                Quantity = s.Quantity,
+                                ProductId = s.ProductId,
+                                OptionId = s.OptionId,
+                                WarehouseId = s.WarehouseId,
+                                CreatedAt = s.CreatedAt,
+                                IsTrash = s.IsTrash
                             }).ToList(),
                         };
 

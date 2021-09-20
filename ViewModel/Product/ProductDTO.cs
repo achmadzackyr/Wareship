@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Wareship.ViewModel.Auth;
 using Wareship.ViewModel.Category;
 using Wareship.ViewModel.Stock;
 
@@ -23,6 +24,7 @@ namespace Wareship.ViewModel.Product
         public SubCategoryDTO SubCategory { get; set; }
         public List<ProductImageDTO> ProductImages { get; set; }
         public List<StockDTO> Stocks { get; set; }
+        public UserDTO User { get; set; }
 
     }
 

@@ -421,5 +421,6 @@ namespace Wareship.Authentication
         public DbSet<Wareship.Model.Stocks.Stock> Stock { get; set; }
         public DbSet<Wareship.Model.Stocks.Option> Option { get; set; }
         public DbSet<Wareship.Model.Stocks.Variation> Variation { get; set; }
+        public DbSet<Wareship.Model.Transactions.Courier> Courier { get; set; }
     }
 }
