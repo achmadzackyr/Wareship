@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Azure.Storage.Blobs;
+using Wareship.Services;
 
 namespace Wareship
 {
@@ -25,6 +27,9 @@ namespace Wareship
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var blobConnection = Configuration.GetValue<string>("ConnectionStrings:BlobConnection");
+            services.AddSingleton(x => new BlobServiceClient(blobConnection));
+            services.AddSingleton<IBlobService,BlobService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

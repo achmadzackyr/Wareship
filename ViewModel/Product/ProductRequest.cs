@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace Wareship.ViewModel.Product
         public string UserId { get; set; }
         public int ProductStatusId { get; set; }
         public int SubCategoryId { get; set; }
-        public List<string> ImageUrl { get; set; }
+        public IFormFileCollection ProductImages { get; set; }
         public List<StockRequest> Stocks { get; set; }
     }
 }

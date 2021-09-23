@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Wareship.Authentication;
 using Wareship.Model.Products;
 using Wareship.Model.Stocks;
+using Wareship.Services;
 using Wareship.ViewModel.Auth;
 using Wareship.ViewModel.Category;
 using Wareship.ViewModel.Global;
@@ -23,18 +25,18 @@ namespace Wareship.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IBlobService _blobService;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, IBlobService blobService)
         {
             _context = context;
+            _blobService = blobService;
         }
 
         // GET: api/Products
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
-
-            //var productList = await _context.Product.ToListAsync();
             var productList = await _context.Product.Include(p => p.ProductImages).ToListAsync();
             var productDTOList = productList.Select(p => new ProductDTO
             {
@@ -43,6 +45,7 @@ namespace Wareship.Controllers
                 ChargeableWeight = p.ChargeableWeight,
                 Description = p.Description,
                 Price = p.Price,
+                PriceString = "Rp" + p.Price.ToString("N0").Replace(',', '.'),
                 Sku = p.Sku,
                 Volume = p.Volume,
                 Weight = p.Weight,
@@ -51,7 +54,8 @@ namespace Wareship.Controllers
                 ProductImages = p.ProductImages.Select(p => new ProductImageDTO
                 {
                     Id = p.Id,
-                    Url = p.Url,
+                    Filename = p.Filename,
+                    Url = "https://wareship.blob.core.windows.net/images/" + p.Filename,
                     ProductId = p.ProductId,
                     CreatedAt = p.CreatedAt
                 }).ToList()
@@ -61,75 +65,25 @@ namespace Wareship.Controllers
             return Ok(response);
         }
 
-        private List<StockDTO> GetProductStock(int productId)
-        {
-            var productStockList = _context.Stock
-                .Where(p => p.ProductId == productId)
-                .Select(p => new StockDTO
-                {
-                    Id = p.Id,
-                    Sku = p.Sku,
-                    Quantity = p.Quantity,
-                    ProductId = p.ProductId,
-                    CreatedAt = p.CreatedAt
-                    //Option = GetProductOption(p.OptionId),
-                    //Warehouse = GetProductWarehouse(p.WarehouseId),
-                })
-                .ToList();
-            return productStockList;
-        }
-
-        private WarehouseDTO GetProductWarehouse(int warehouseId)
-        {
-            var warehouse = _context.Warehouse
-                .Where(p => p.Id == warehouseId)
-                .Select(w => new WarehouseDTO
-                {
-                    Id = w.Id,
-                    Name = w.Name,
-                    City = w.City,
-                    Phone = w.Phone,
-                    Province = w.Province,
-                    Street = w.Street,
-                    Subdistrict = w.Subdistrict,
-                    ZipCode = w.ZipCode
-                })
-                .FirstOrDefault();
-            return warehouse;
-        }
-
-        private OptionDTO GetProductOption(int optionId)
-        {
-            var option = _context.Option
-                .Where(p => p.Id == optionId)
-                .Select(p => new OptionDTO
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Variation = GetOptionVariation(p.VariationId)
-                })
-                .FirstOrDefault();
-            return option;
-        }
-
-        private VariationDTO GetOptionVariation(int variationId)
-        {
-            var variation = _context.Variation
-                .Where(p => p.Id == variationId)
-                .Select(p => new VariationDTO
-                {
-                    Id = p.Id,
-                    Name = p.Name
-                })
-                .FirstOrDefault();
-            return variation;
-        }
+        //private VariationDTO GetOptionVariation(int variationId)
+        //{
+        //    var variation = _context.Variation
+        //        .Where(p => p.Id == variationId)
+        //        .Select(p => new VariationDTO
+        //        {
+        //            Id = p.Id,
+        //            Name = p.Name
+        //        })
+        //        .FirstOrDefault();
+        //    return variation;
+        //}
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var p = await _context.Product
+                .Where(p => p.Id == id)
                 .Include(p => p.ProductImages)
                 .Include(p => p.Stocks)
                 .ThenInclude(w => w.Warehouse)
@@ -141,7 +95,7 @@ namespace Wareship.Controllers
                 .Include(p => p.User)
                 .AsSplitQuery()
                 .OrderBy(p => p.Id)
-                .SingleAsync(p => p.Id == id);
+                .FirstOrDefaultAsync();
 
             if (p == null)
             {
@@ -188,8 +142,9 @@ namespace Wareship.Controllers
                 ProductImages = p.ProductImages.Select(p => new ProductImageDTO
                 {
                     Id = p.Id,
-                    Url = p.Url,
+                    Filename = p.Filename,
                     ProductId = p.ProductId,
+                    Url = "https://wareship.blob.core.windows.net/images/" + p.Filename,
                     CreatedAt = p.CreatedAt
                 }).ToList(),
                 Stocks = p.Stocks.Select(p => new StockDTO
@@ -233,7 +188,7 @@ namespace Wareship.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, [FromBody] ProductRequest request)
+        public async Task<IActionResult> PutProduct(int id, [FromForm] ProductRequest request)
         {
             if (id != request.Id)
             {
@@ -242,6 +197,8 @@ namespace Wareship.Controllers
 
             try
             {
+                var sekarang = DateTime.Now;
+
                 var product = new Product
                 {
                     Id = request.Id,
@@ -260,45 +217,102 @@ namespace Wareship.Controllers
                 _context.Entry(product).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                //delete all current image
-                var currentImageList = await _context
-                    .ProductImage.Where(im => im
-                    .ProductId == product.Id)
-                    .ToListAsync();
-
-                foreach (var currentImage in currentImageList)
+                if(request.ProductImages.Count() > 0)
                 {
-                    _context.ProductImage.Remove(currentImage);
-                    await _context.SaveChangesAsync();
-                }
+                    //delete all current image
+                    var currentImageList = await _context
+                        .ProductImage.Where(im => im
+                        .ProductId == product.Id)
+                        .ToListAsync();
 
-                //add new image
-                foreach(var imgUrl in request.ImageUrl)
-                {
-                    var productImage = new ProductImage
+                    foreach (var currentImage in currentImageList)
                     {
-                        ProductId = product.Id,
-                        CreatedAt = DateTime.Now,
-                        Url = imgUrl
-                    };
+                        var del = await _blobService.DeleteBlob(currentImage.Filename, "images");
+                        if(del)
+                        {
+                            _context.ProductImage.Remove(currentImage);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
 
-                    _context.ProductImage.Add(productImage);
-                    await _context.SaveChangesAsync();
+                    //add new image
+                    var i = 1;
+                    foreach (var img in request.ProductImages)
+                    {
+                        var fileName = request.Name.Trim().Replace(" ", "-") + "-" + i + "-" + sekarang.ToString("ddMMyyyyhhmmss") + Path.GetExtension(img.FileName);
+                        var res = await _blobService.UploadBlob(fileName, img, "images");
+                        if (res)
+                        {
+                            var productImage = new ProductImage
+                            {
+                                ProductId = product.Id,
+                                CreatedAt = sekarang,
+                                Filename = fileName
+                            };
+
+                            _context.ProductImage.Add(productImage);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, "Failed to upload images", null));
+                        }
+                        i++;
+                    }
                 }
                 
+                if(request.Stocks.Count() > 0)
+                {
+                    //delete all current stock
+                    var currentStockList = await _context
+                        .Stock.Where(s => s
+                        .ProductId == product.Id)
+                        .ToListAsync();
+
+                    foreach (var currentStock in currentStockList)
+                    {
+                        _context.Stock.Remove(currentStock);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    //add new stock
+                    foreach (var s in request.Stocks)
+                    {
+                        var stock = new Stock
+                        {
+                            Sku = s.Sku,
+                            Quantity = s.Quantity,
+                            ProductId = product.Id,
+                            OptionId = s.OptionId,
+                            WarehouseId = s.WarehouseId,
+                            CreatedAt = sekarang,
+                            IsTrash = 0
+                        };
+
+                        _context.Stock.Add(stock);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
 
                 var p = await _context.Product
-                    .Include(p => p.ProductImages)
-                    .Where(p => p.Id == id)
-                    .FirstOrDefaultAsync();
+                .Include(p => p.ProductImages)
+                .Include(p => p.Stocks)
+                .ThenInclude(w => w.Warehouse)
+                .Include(p => p.Stocks)
+                .ThenInclude(o => o.Option)
+                .ThenInclude(v => v.Variation)
+                .Include(p => p.SubCategory)
+                .ThenInclude(s => s.Category)
+                .Include(p => p.User)
+                .AsSplitQuery()
+                .OrderBy(p => p.Id)
+                .SingleAsync(p => p.Id == id);
 
-                var subCat = await _context.SubCategory
-                    .Where(s => s.Id == p.SubCategoryId)
-                    .FirstOrDefaultAsync();
-
-                var cat = await _context.Category
-                    .Where(s => s.Id == subCat.CategoryId)
-                    .FirstOrDefaultAsync();
+                if (p == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, GenerateResponse(StatusCodes.Status404NotFound, "Product Not Found", null));
+                }
 
                 var productDTO = new ProductDTO
                 {
@@ -312,14 +326,70 @@ namespace Wareship.Controllers
                     Volume = p.Volume,
                     Weight = p.Weight,
                     UserId = p.UserId,
+                    User = new UserDTO
+                    {
+                        City = p.User.City,
+                        Name = p.User.Name,
+                        Phone = p.User.Phone,
+                        ProfilePictureUrl = p.User.ProfilePictureUrl,
+                        Province = p.User.Province,
+                        Street = p.User.Street,
+                        Subdistrict = p.User.Subdistrict,
+                        ZipCode = p.User.ZipCode
+                    },
                     ProductStatusId = p.ProductStatusId,
+                    SubCategory = new SubCategoryDTO
+                    {
+                        Id = p.SubCategory.Id,
+                        Name = p.SubCategory.Name,
+                        ThumbnailUrl = p.SubCategory.ThumbnailUrl,
+                        CategoryId = p.SubCategory.CategoryId,
+                        Category = new CategoryDTO
+                        {
+                            Id = p.SubCategory.Category.Id,
+                            Name = p.SubCategory.Category.Name,
+                            ThumbnailUrl = p.SubCategory.Category.ThumbnailUrl
+                        }
+                    },
                     ProductImages = p.ProductImages.Select(p => new ProductImageDTO
                     {
                         Id = p.Id,
-                        Url = p.Url,
+                        Filename = p.Filename,
                         ProductId = p.ProductId,
+                        Url = "https://wareship.blob.core.windows.net/images/" + p.Filename,
                         CreatedAt = p.CreatedAt
                     }).ToList(),
+                    Stocks = p.Stocks.Select(p => new StockDTO
+                    {
+                        Id = p.Id,
+                        Sku = p.Sku,
+                        Quantity = p.Quantity,
+                        ProductId = p.ProductId,
+                        CreatedAt = p.CreatedAt,
+                        Option = new OptionDTO
+                        {
+                            Id = p.Option.Id,
+                            Name = p.Option.Name,
+                            Variation = new VariationDTO
+                            {
+                                Id = p.Option.Variation.Id,
+                                Name = p.Option.Variation.Name
+                            }
+                        },
+                        WarehouseId = p.Warehouse.Id,
+                        Warehouse = new WarehouseDTO
+                        {
+                            Id = p.Warehouse.Id,
+                            Name = p.Warehouse.Name,
+                            City = p.Warehouse.City,
+                            Subdistrict = p.Warehouse.Subdistrict,
+                            Phone = p.Warehouse.Phone,
+                            Province = p.Warehouse.Province,
+                            Street = p.Warehouse.Street,
+                            ZipCode = p.Warehouse.ZipCode
+                        }
+                    })
+                    .ToList()
                 };
 
                 return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", productDTO));
@@ -341,7 +411,7 @@ namespace Wareship.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct([FromBody] ProductRequest request)
+        public async Task<ActionResult<Product>> PostProduct([FromForm] ProductRequest request)
         {
             if (ModelState.IsValid)
             {
@@ -350,7 +420,6 @@ namespace Wareship.Controllers
                 {
                     var product = new Product
                     {
-                        Id = request.Id,
                         Sku = request.Sku,
                         Name = request.Name,
                         Description = request.Description,
@@ -368,18 +437,29 @@ namespace Wareship.Controllers
                         await _context.SaveChangesAsync();
 
                         //add new image
-                        foreach (var imgUrl in request.ImageUrl)
+                        var i = 1;
+                        var sekarang = DateTime.Now;
+                        foreach (var img in request.ProductImages)
                         {
-                            var productImage = new ProductImage
+                            var fileName = request.Name.Trim().Replace(" ","-") + "-" + i + "-" + sekarang.ToString("ddMMyyyyhhmmss") + Path.GetExtension(img.FileName);
+                            var res = await _blobService.UploadBlob(fileName, img, "images");
+                            if (res)
                             {
-                                ProductId = product.Id,
-                                CreatedAt = DateTime.Now,
-                                Url = imgUrl
-                            };
+                                var productImage = new ProductImage
+                                {
+                                    ProductId = product.Id,
+                                    CreatedAt = sekarang,
+                                    Filename = fileName
+                                };
 
-                            //_context.Entry(productImage).State = EntityState.Modified;
-                            _context.ProductImage.Add(productImage);
-                            await _context.SaveChangesAsync();
+                                _context.ProductImage.Add(productImage);
+                                await _context.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, "Failed to upload images", null));
+                            }
+                            i++;
                         }
 
                         //add stock
@@ -392,7 +472,7 @@ namespace Wareship.Controllers
                                 ProductId = product.Id,
                                 OptionId = s.OptionId,
                                 WarehouseId = s.WarehouseId,
-                                CreatedAt = DateTime.Now,
+                                CreatedAt = sekarang,
                                 IsTrash = 0
                             };
 
@@ -416,7 +496,8 @@ namespace Wareship.Controllers
                             ProductImages = product.ProductImages.Select(p => new ProductImageDTO
                             {
                                 Id = p.Id,
-                                Url = p.Url,
+                                Filename = p.Filename,
+                                Url = "https://wareship.blob.core.windows.net/images/" + p.Filename,
                                 ProductId = p.ProductId,
                                 CreatedAt = p.CreatedAt
                             }).ToList(),
@@ -435,9 +516,9 @@ namespace Wareship.Controllers
 
                         return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", productDTO));
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, "Failed to add to database", null));
+                        return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, ex.Message, null));
                     }
                 }
                 else

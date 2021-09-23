@@ -58,7 +58,7 @@ namespace Wareship.Authentication
                     Id = i,
                     CreatedAt = DateTime.Now,
                     ProductId = i,
-                    Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                    Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
                 });
             }
 

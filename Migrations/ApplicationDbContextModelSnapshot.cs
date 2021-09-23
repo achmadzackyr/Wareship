@@ -308,8 +308,8 @@ namespace Wareship.Migrations
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
                             City = "Kabupaten Ciamis",
-                            ConcurrencyStamp = "1cb7ecdb-826b-4523-a30d-237d8aa93f5f",
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 0, 993, DateTimeKind.Local).AddTicks(1823),
+                            ConcurrencyStamp = "84b3f356-5d46-461e-9fd9-633f1fbe3709",
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 233, DateTimeKind.Local).AddTicks(5547),
                             Dob = new DateTime(1989, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@example.com",
                             EmailConfirmed = false,
@@ -318,12 +318,12 @@ namespace Wareship.Migrations
                             Name = "Admin Suradmin",
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBPDYtnPrGDW7n6CgTTwKsWhjQ2Fyq6AGGFn4o0nBQjk4dwQAAdLsaV74hFhN1jBPg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEESZcg8OlknXEKfZOoWX0xowJh2bCO8gYrxJvUq5dWYgn2GTWKub+kke+SZkCQ8coQ==",
                             PhoneNumber = "085223670378",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             Province = "Jawa Barat",
-                            SecurityStamp = "c7cd069e-9e90-46f5-b324-81ab099ce9c7",
+                            SecurityStamp = "fefed367-7a94-4475-a22e-847c3dcb7561",
                             Street = "Dusun Desa, Desa Cijeungjing",
                             Subdistrict = "Cijeungjing",
                             TwoFactorEnabled = false,
@@ -336,8 +336,8 @@ namespace Wareship.Migrations
                             Id = "supplier-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
                             City = "Kabupaten Ciamis",
-                            ConcurrencyStamp = "41da727f-050c-4e3a-b499-456a8191b570",
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 21, DateTimeKind.Local).AddTicks(4818),
+                            ConcurrencyStamp = "c093e816-a80f-49be-91ef-0929aff9d597",
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 275, DateTimeKind.Local).AddTicks(1521),
                             Dob = new DateTime(1989, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "supplier@example.com",
                             EmailConfirmed = false,
@@ -346,12 +346,12 @@ namespace Wareship.Migrations
                             Name = "Susu Plier",
                             NormalizedEmail = "SUPPLIER@EXAMPLE.COM",
                             NormalizedUserName = "SUPPLIER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGJiq2W1E37gGMbJIHAXxhjRmRMJQLHs8M8X/YFhAbqK7rZUYDozHQUPYMxzypi3nA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMSowM6iZbmzPj5ioV6tkNfdVyDqeWFIJFMeNF69LqC6oJVLVwCRHwXRWHG07nygmQ==",
                             PhoneNumber = "085223670378",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             Province = "Jawa Barat",
-                            SecurityStamp = "1d5ae92e-ec53-49e3-bc98-78cf76611ac1",
+                            SecurityStamp = "7359160e-aefc-4121-b6fa-c9736a42d6ec",
                             Street = "Dusun Desa, Desa Cijeungjing",
                             Subdistrict = "Cijeungjing",
                             TwoFactorEnabled = false,
@@ -644,11 +644,11 @@ namespace Wareship.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Filename")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -660,72 +660,72 @@ namespace Wareship.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(6842),
-                            ProductId = 1,
-                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 284, DateTimeKind.Local).AddTicks(6083),
+                            Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                            ProductId = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9516),
-                            ProductId = 2,
-                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 284, DateTimeKind.Local).AddTicks(7285),
+                            Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                            ProductId = 2
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9534),
-                            ProductId = 3,
-                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 284, DateTimeKind.Local).AddTicks(7292),
+                            Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                            ProductId = 3
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9537),
-                            ProductId = 4,
-                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 284, DateTimeKind.Local).AddTicks(7294),
+                            Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                            ProductId = 4
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9539),
-                            ProductId = 5,
-                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 284, DateTimeKind.Local).AddTicks(7295),
+                            Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                            ProductId = 5
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9549),
-                            ProductId = 6,
-                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 284, DateTimeKind.Local).AddTicks(7298),
+                            Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                            ProductId = 6
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9552),
-                            ProductId = 7,
-                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 284, DateTimeKind.Local).AddTicks(7299),
+                            Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                            ProductId = 7
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9554),
-                            ProductId = 8,
-                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 284, DateTimeKind.Local).AddTicks(7301),
+                            Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                            ProductId = 8
                         },
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9557),
-                            ProductId = 9,
-                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 284, DateTimeKind.Local).AddTicks(7302),
+                            Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                            ProductId = 9
                         },
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2021, 9, 14, 21, 31, 1, 40, DateTimeKind.Local).AddTicks(9561),
-                            ProductId = 10,
-                            Url = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                            CreatedAt = new DateTime(2021, 9, 22, 20, 50, 53, 284, DateTimeKind.Local).AddTicks(7303),
+                            Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                            ProductId = 10
                         });
                 });
 

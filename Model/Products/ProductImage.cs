@@ -8,7 +8,7 @@ namespace Wareship.Model.Products
     public class ProductImage
     {
         public int Id { get; set; }
-        public string Url { get; set; }
+        public string Filename { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public int ProductId { get; set; }
