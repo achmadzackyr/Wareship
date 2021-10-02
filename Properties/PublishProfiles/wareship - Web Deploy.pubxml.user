@@ -7,7 +7,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAACi1dDaYNOkahF/07zihNiQAAAAACAAAAAAAQZgAAAAEAACAAAABFN6j7+oNwc1sarBK5O3bRewI8mqsLnjpjm5mxDkpc+gAAAAAOgAAAAAIAACAAAACt9PcSKhnAWy+Nk/FgEB2PMvQy3iX5rw2kqvHnOkaw2IAAAACX05cCddkop+BGSPYCCU/DQHYpbG7kkQnaCE8v1hwkP/6nIk6XiqP+ipbZaHpVXBRIsDR/YSZhtKzwe77bad2pcxDo/+U6hTSFnmLwfeJWjHvHGkcfzTBs7WRu+jdx8ZW58stG9zdMHS1czuKm2jF1TjgOA13xBt/3A6NFQViWwkAAAACbt07BTXN/dNctug3HzfP/jVyXXKxD6wiMpGIfy0FJ7HYXNJtMgOfia6KiCvhEOt7nhe2InAOPXc9F0p8FTOwc</EncryptedPassword>
-    <History>True|2021-09-23T16:41:22.0071943Z;True|2021-09-20T23:01:29.9112215+07:00;True|2021-09-09T23:22:39.4709659+07:00;False|2021-09-09T23:03:10.7746980+07:00;True|2021-09-09T11:05:08.6053508+07:00;</History>
+    <History>True|2021-10-02T16:35:51.1096083Z;True|2021-09-26T23:50:06.9362041+07:00;True|2021-09-23T23:41:22.0071943+07:00;True|2021-09-20T23:01:29.9112215+07:00;True|2021-09-09T23:22:39.4709659+07:00;False|2021-09-09T23:03:10.7746980+07:00;True|2021-09-09T11:05:08.6053508+07:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <EFMigrations Include="Wareship.Authentication.ApplicationDbContext">

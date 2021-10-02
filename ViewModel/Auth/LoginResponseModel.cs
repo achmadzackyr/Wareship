@@ -17,5 +17,6 @@ namespace Wareship.ViewModel.Auth
         public string Message { get; set; }
         public string Token { get; set; }
         public DateTime Expiration { get; set; }
+        public UserDTO User { get; set; }
     }
 }

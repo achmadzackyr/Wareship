@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Wareship.Authentication;
 using Wareship.ViewModel.Global;
 
 namespace Wareship.ViewModel.Auth
@@ -16,6 +15,6 @@ namespace Wareship.ViewModel.Auth
     public class ResultRegister
     {
         public string Message { get; set; }
-        public ApplicationUser User { get; set; }
+        public UserDTO User { get; set; }
     }
 }

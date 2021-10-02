@@ -75,6 +75,21 @@ namespace Wareship.Controllers
                     resu.Message = "Login Successfully!";
                     resu.Token = new JwtSecurityTokenHandler().WriteToken(token);
                     resu.Expiration = token.ValidTo;
+                    resu.User = new UserDTO
+                    {
+                        City = user.City,
+                        Email = user.Email,
+                        Name = user.Name,
+                        Phone = user.Phone,
+                        ProfilePictureUrl = user.ProfilePictureUrl,
+                        Province = user.Province,
+                        Street = user.Street,
+                        Subdistrict = user.Subdistrict,
+                        ZipCode = user.ZipCode,
+                        UserName = user.UserName,
+                        UserStatusId = user.UserStatusId,
+                        UserTierId = user.UserTierId
+                    };
 
                     resp.Status = stat;
                     resp.Result = resu;
@@ -178,10 +193,26 @@ namespace Wareship.Controllers
 
                 await userManager.AddToRoleAsync(user, model.RoleName);
 
+                var newUser = new UserDTO
+                {
+                    City = user.City,
+                    Email = user.Email,
+                    Name = user.Name,
+                    Phone = user.Phone,
+                    ProfilePictureUrl = user.ProfilePictureUrl,
+                    Province = user.Province,
+                    Street = user.Street,
+                    Subdistrict = user.Subdistrict,
+                    ZipCode = user.ZipCode,
+                    UserName = user.UserName,
+                    UserStatusId = user.UserStatusId,
+                    UserTierId = user.UserTierId
+                };
+
                 stat.ResponseCode = StatusCodes.Status200OK;
                 stat.ResponseMessage = "Success";
 
-                resu.User = user;
+                resu.User = newUser;
                 resu.Message = "User created successfully!";
 
                 resp.Status = stat;
@@ -250,10 +281,26 @@ namespace Wareship.Controllers
 
             await userManager.AddToRoleAsync(user, UserRoles.Admin);
 
+            var newUser = new UserDTO
+            {
+                City = user.City,
+                Email = user.Email,
+                Name = user.Name,
+                Phone = user.Phone,
+                ProfilePictureUrl = user.ProfilePictureUrl,
+                Province = user.Province,
+                Street = user.Street,
+                Subdistrict = user.Subdistrict,
+                ZipCode = user.ZipCode,
+                UserName = user.UserName,
+                UserStatusId = user.UserStatusId,
+                UserTierId = user.UserTierId
+            };
+
             stat.ResponseCode = StatusCodes.Status200OK;
             stat.ResponseMessage = "Success";
 
-            resu.User = user;
+            resu.User = newUser;
             resu.Message = "User created successfully!";
 
             resp.Status = stat;
