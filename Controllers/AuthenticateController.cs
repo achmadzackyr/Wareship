@@ -47,6 +47,7 @@ namespace Wareship.Controllers
                 if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
                 {
                     var userRoles = await userManager.GetRolesAsync(user);
+                    var roleList = new List<string>();
 
                     var authClaims = new List<Claim>
                 {
@@ -57,6 +58,7 @@ namespace Wareship.Controllers
                     foreach (var userRole in userRoles)
                     {
                         authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                        roleList.Add(userRole);
                     }
 
                     var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
@@ -90,6 +92,7 @@ namespace Wareship.Controllers
                         UserStatusId = user.UserStatusId,
                         UserTierId = user.UserTierId
                     };
+                    resu.Roles = roleList;
 
                     resp.Status = stat;
                     resp.Result = resu;
@@ -191,7 +194,23 @@ namespace Wareship.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, resp);
                 }
 
-                await userManager.AddToRoleAsync(user, model.RoleName);
+                foreach (var role in model.RoleNames) {
+                    try
+                    {
+                        await userManager.AddToRoleAsync(user, role);
+                    } catch
+                    {
+                        stat.ResponseCode = StatusCodes.Status500InternalServerError;
+                        stat.ResponseMessage = "Roles not exist";
+
+                        resu.User = null;
+                        resp.Status = stat;
+                        resp.Result = resu;
+
+                        await userManager.DeleteAsync(user);
+                        return StatusCode(StatusCodes.Status500InternalServerError, resp);
+                    }
+                }
 
                 var newUser = new UserDTO
                 {
@@ -214,6 +233,7 @@ namespace Wareship.Controllers
 
                 resu.User = newUser;
                 resu.Message = "User created successfully!";
+                resu.Roles = model.RoleNames;
 
                 resp.Status = stat;
                 resp.Result = resu;

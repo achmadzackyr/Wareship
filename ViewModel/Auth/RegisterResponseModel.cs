@@ -16,5 +16,6 @@ namespace Wareship.ViewModel.Auth
     {
         public string Message { get; set; }
         public UserDTO User { get; set; }
+        public List<string> Roles { get; set; }
     }
 }

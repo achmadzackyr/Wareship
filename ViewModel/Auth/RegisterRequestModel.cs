@@ -46,7 +46,7 @@ namespace Wareship.ViewModel.Auth
         public string CreatedBy { get; set; }
         
         [Required(ErrorMessage = "Role Name is required")]
-        public string RoleName { get; set; }
+        public List<string> RoleNames { get; set; }
         
         [Required(ErrorMessage = "UserStatusId is required")]
         public int UserStatusId { get; set; }
