@@ -17,6 +17,8 @@ namespace Wareship.ViewModel.Auth
         public string ProfilePictureUrl { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }
+        public DateTime JoinDate { get; set; }
+        public string JoinDateString { get; set; }
         public int UserStatusId { get; set; }
         public int UserTierId { get; set; }
     }

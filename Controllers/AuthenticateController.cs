@@ -90,7 +90,9 @@ namespace Wareship.Controllers
                         ZipCode = user.ZipCode,
                         UserName = user.UserName,
                         UserStatusId = user.UserStatusId,
-                        UserTierId = user.UserTierId
+                        UserTierId = user.UserTierId,
+                        JoinDate = user.CreatedAt,
+                        JoinDateString = user.CreatedAt.ToString("dd-MM-yyyy")
                     };
                     resu.Roles = roleList;
 
@@ -325,6 +327,59 @@ namespace Wareship.Controllers
 
             resp.Status = stat;
             resp.Result = resu;
+            return Ok(resp);
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("me")]
+        public async Task<IActionResult> GetByToken()
+        {
+            var stat = new Status();
+            var resu = new ResultMe();
+
+            var resp = new MeResponseModel();
+            var roleList = new List<string>();
+
+            string Username = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            var user = await userManager.FindByNameAsync(Username);
+            if (user == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, Username);
+            }
+
+            var roles = await userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                roleList.Add(role);
+            }
+
+            stat.ResponseCode = StatusCodes.Status200OK;
+            stat.ResponseMessage = "Success";
+
+            resu.User = new UserDTO
+            {
+                City = user.City,
+                Email = user.Email,
+                Name = user.Name,
+                Phone = user.Phone,
+                ProfilePictureUrl = user.ProfilePictureUrl,
+                Province = user.Province,
+                Street = user.Street,
+                Subdistrict = user.Subdistrict,
+                ZipCode = user.ZipCode,
+                UserName = user.UserName,
+                UserStatusId = user.UserStatusId,
+                UserTierId = user.UserTierId,
+                JoinDate = user.CreatedAt,
+                JoinDateString = user.CreatedAt.ToString("dd-MM-yyyy")
+            };
+            resu.Roles = roleList;
+
+            resp.Status = stat;
+            resp.Result = resu;
+
             return Ok(resp);
         }
     }

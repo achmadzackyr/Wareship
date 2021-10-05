@@ -142,4 +142,3 @@ C:\Wareship\bin\Debug\net5.0\Azure.Core.dll
 C:\Wareship\bin\Debug\net5.0\Azure.Storage.Blobs.dll
 C:\Wareship\bin\Debug\net5.0\Azure.Storage.Common.dll
 C:\Wareship\bin\Debug\net5.0\System.Memory.Data.dll
-C:\Wareship\obj\Debug\net5.0\Wareship.csprojAssemblyReference.cache
