@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "N7zoY9/xAQNipbLazsZK9PkfUR+drtDUl1+Z8EhVVDdakT3RlnJSMVhV6H39rFyykDGSjso6yu34Ns7wnQgGiQ==",
+  "dgSpecHash": "5BBuEVrRQ483ODp7s15HpVlnmrMks/dqYoXV/TeyF5+4cRkJ6QfImS/5LoeIH1+Kmw5FKhnZdvWX9rj4RfI1iQ==",
   "success": true,
   "projectFilePath": "C:\\Wareship\\Wareship.csproj",
   "expectedPackageFiles": [
@@ -84,6 +84,7 @@
     "C:\\Users\\user\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\restsharp\\106.12.0\\restsharp.106.12.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\swashbuckle.aspnetcore\\5.6.3\\swashbuckle.aspnetcore.5.6.3.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.6.3\\swashbuckle.aspnetcore.swagger.5.6.3.nupkg.sha512",
