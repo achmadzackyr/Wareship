@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Wareship.Model.Products;
 using Wareship.Model.Transactions;
+using Wareship.Model.Users;
 
 namespace Wareship.Model.Stocks
 {
@@ -31,5 +32,6 @@ namespace Wareship.Model.Stocks
         public Warehouse Warehouse { get; set; }
 
         public List<Order> Orders { get; set; }
+        public List<CartDetail> CartDetails { get; set; }
     }
 }

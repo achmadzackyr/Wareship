@@ -44,9 +44,31 @@ namespace Wareship.Authentication
             this.SeedProduct(builder);
             this.SeedProductImage(builder);
             this.SeedStock(builder);
+            this.SeedCart(builder);
+            this.SeedCartDetail(builder);
             this.SeedTransaction(builder);
             this.SeedOrder(builder);
             this.SeedUserTransaction(builder);
+        }
+
+
+        private void SeedCart(ModelBuilder builder)
+        {
+            builder.Entity<Cart>()
+            .HasOne(s => s.User)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Restrict);
+        }
+
+        private void SeedCartDetail(ModelBuilder builder)
+        {
+            builder.Entity<CartDetail>()
+            .HasOne(p => p.Cart)
+            .WithMany(b => b.CartDetails);
+
+            builder.Entity<CartDetail>()
+            .HasOne(p => p.Stock)
+            .WithMany(b => b.CartDetails);
         }
 
         private void SeedProductImage(ModelBuilder builder)
@@ -84,6 +106,14 @@ namespace Wareship.Authentication
             builder.Entity<Order>()
             .HasOne(p => p.Transaction)
             .WithMany(b => b.Orders);
+
+            builder.Entity<Transaction>()
+            .HasOne(p => p.Shipper)
+            .WithMany(b => b.Transactions);
+
+            builder.Entity<Transaction>()
+            .HasOne(p => p.Consignee)
+            .WithMany(b => b.Transactions);
         }
 
         private void SeedShipper(ModelBuilder builder)
