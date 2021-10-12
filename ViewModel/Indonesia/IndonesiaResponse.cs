@@ -23,7 +23,6 @@ namespace Wareship.ViewModel.Indonesia
         public string Nama { get; set; }
     }
 
-
     public partial class CityResponse
     {
         public Status Status { get; set; }
@@ -39,6 +38,23 @@ namespace Wareship.ViewModel.Indonesia
     {
         public long Id { get; set; }
         public long Id_Provinsi { get; set; }
+        public string Nama { get; set; }
+    }
+    public partial class SubdistrictResponse
+    {
+        public Status Status { get; set; }
+        public SubdistrictListResponse Result { get; set; }
+    }
+
+    public partial class SubdistrictListResponse
+    {
+        public List<Kecamatan> Kecamatan { get; set; }
+    }
+
+    public partial class Kecamatan
+    {
+        public long Id { get; set; }
+        public long Id_Kota { get; set; }
         public string Nama { get; set; }
     }
 }

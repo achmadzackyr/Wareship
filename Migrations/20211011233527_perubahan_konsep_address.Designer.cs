@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wareship.Authentication;
 
 namespace Wareship.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211011233527_perubahan_konsep_address")]
+    partial class perubahan_konsep_address
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -289,8 +291,8 @@ namespace Wareship.Migrations
                         {
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "21781933-522d-4550-bb08-158ff70a1719",
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 744, DateTimeKind.Local).AddTicks(6190),
+                            ConcurrencyStamp = "2d691597-9e30-44ab-952b-2edf8a3575e0",
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 920, DateTimeKind.Local).AddTicks(1380),
                             Dob = new DateTime(1989, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@example.com",
                             EmailConfirmed = false,
@@ -299,11 +301,11 @@ namespace Wareship.Migrations
                             Name = "Admin Suradmin",
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBifXO0mcyiLCSMWUOR7sOYVvbfGM4uQZzoqVvZU5ZFPItug3C4Kdcj9VrhBlGbcdA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOj1J9p0l7ns1JPmFZQxZXCEM/EvqXr4osuuFyVSdLvkXZjq9gvJs5iyMW62O7Sqlw==",
                             PhoneNumber = "085223670378",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                            SecurityStamp = "f34b917d-fc78-4fa3-9190-203c656d414c",
+                            SecurityStamp = "0e892ddc-637b-4629-8205-e5eff52d053d",
                             TwoFactorEnabled = false,
                             UserName = "admin",
                             UserStatusId = 1,
@@ -313,8 +315,8 @@ namespace Wareship.Migrations
                         {
                             Id = "supplier-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f629f9e2-9595-4fb9-8932-fe2a31f26c28",
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 757, DateTimeKind.Local).AddTicks(7947),
+                            ConcurrencyStamp = "66bc6fa3-3f61-408f-9c71-c4349b2405bf",
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 936, DateTimeKind.Local).AddTicks(5658),
                             Dob = new DateTime(1989, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "supplier@example.com",
                             EmailConfirmed = false,
@@ -323,11 +325,11 @@ namespace Wareship.Migrations
                             Name = "Susu Plier",
                             NormalizedEmail = "SUPPLIER@EXAMPLE.COM",
                             NormalizedUserName = "SUPPLIER",
-                            PasswordHash = "AQAAAAEAACcQAAAAECwbuPI7+BTMBbrggeqGzdLC4eUZlX045U+YxAhQq8GwUHngK/1ho32UG/Mdx4mi6w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOKUI32FMdOVt4gw2wOY8yNeNqFGTjOUBdTDqaqFiQ0eY1a/euP/zgY6zg+De8AtLA==",
                             PhoneNumber = "085223670378",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                            SecurityStamp = "90452c11-daa0-4471-bdf3-98da7ed8e573",
+                            SecurityStamp = "5f5497e4-ee52-4dfc-a4de-d2df0aae0b01",
                             TwoFactorEnabled = false,
                             UserName = "supplier",
                             UserStatusId = 1,
@@ -634,70 +636,70 @@ namespace Wareship.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 767, DateTimeKind.Local).AddTicks(2788),
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 946, DateTimeKind.Local).AddTicks(2002),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 767, DateTimeKind.Local).AddTicks(3976),
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 946, DateTimeKind.Local).AddTicks(3183),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 2
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 767, DateTimeKind.Local).AddTicks(3982),
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 946, DateTimeKind.Local).AddTicks(3190),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 3
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 767, DateTimeKind.Local).AddTicks(3983),
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 946, DateTimeKind.Local).AddTicks(3191),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 4
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 767, DateTimeKind.Local).AddTicks(3985),
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 946, DateTimeKind.Local).AddTicks(3193),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 5
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 767, DateTimeKind.Local).AddTicks(3989),
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 946, DateTimeKind.Local).AddTicks(3196),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 6
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 767, DateTimeKind.Local).AddTicks(3990),
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 946, DateTimeKind.Local).AddTicks(3198),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 7
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 767, DateTimeKind.Local).AddTicks(3991),
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 946, DateTimeKind.Local).AddTicks(3199),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 8
                         },
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 767, DateTimeKind.Local).AddTicks(3993),
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 946, DateTimeKind.Local).AddTicks(3200),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 9
                         },
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2021, 10, 12, 6, 41, 17, 767, DateTimeKind.Local).AddTicks(3995),
+                            CreatedAt = new DateTime(2021, 10, 12, 6, 35, 25, 946, DateTimeKind.Local).AddTicks(3202),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 10
                         });
@@ -1012,9 +1014,6 @@ namespace Wareship.Migrations
 
                     b.Property<int>("OptionId")
                         .HasColumnType("int");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");

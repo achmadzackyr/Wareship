@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Wareship.ViewModel.Global;
 using Wareship.ViewModel.Auth;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using Wareship.Model.Users;
 
 namespace Wareship.Controllers
 {
@@ -24,12 +27,14 @@ namespace Wareship.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
         //private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
-        public AuthenticateController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthenticateController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, ApplicationDbContext context)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             _configuration = configuration;
+            _context = context;
         }
 
         [HttpPost]
@@ -77,17 +82,20 @@ namespace Wareship.Controllers
                     resu.Message = "Login Successfully!";
                     resu.Token = new JwtSecurityTokenHandler().WriteToken(token);
                     resu.Expiration = token.ValidTo;
+
+                    // var userAddress = _context.UserAddress.Where();
+
                     resu.User = new UserDTO
                     {
-                        City = user.City,
+                        // City = user.City,
                         Email = user.Email,
                         Name = user.Name,
-                        Phone = user.Phone,
+                        // Phone = user.Phone,
                         ProfilePictureUrl = user.ProfilePictureUrl,
-                        Province = user.Province,
-                        Street = user.Street,
-                        Subdistrict = user.Subdistrict,
-                        ZipCode = user.ZipCode,
+                        //Province = user.Province,
+                        //Street = user.Street,
+                        //Subdistrict = user.Subdistrict,
+                        //ZipCode = user.ZipCode,
                         UserName = user.UserName,
                         UserStatusId = user.UserStatusId,
                         UserTierId = user.UserTierId,
@@ -160,18 +168,18 @@ namespace Wareship.Controllers
 
                 ApplicationUser user = new()
                 {
-                    Email = model.Email,
+                    //Email = model.Email,
                     SecurityStamp = Guid.NewGuid().ToString(),
                     UserName = model.Username,
-                    Name = model.Name,
-                    Dob = model.Dob,
-                    Gender = model.Gender,
-                    Street = model.Street,
-                    Subdistrict = model.Subdistrict,
-                    City = model.City,
-                    Province = model.Province,
-                    PhoneNumber = model.PhoneNumber,
-                    ProfilePictureUrl = model.ProfilePictureUrl,
+                    //Name = model.Name,
+                    //Dob = model.Dob,
+                    //Gender = model.Gender,
+                    //Street = model.Street,
+                    //Subdistrict = model.Subdistrict,
+                    //City = model.City,
+                    //Province = model.Province,
+                    //PhoneNumber = model.PhoneNumber,
+                    //ProfilePictureUrl = model.ProfilePictureUrl,
                     CreatedAt = DateTime.Now,
                     CreatedBy = null,
                     UserStatusId = model.UserStatusId,
@@ -179,6 +187,7 @@ namespace Wareship.Controllers
                 };
 
                 var result = await userManager.CreateAsync(user, model.Password);
+
                 if (!result.Succeeded)
                 {
                     stat.ResponseCode = StatusCodes.Status500InternalServerError;
@@ -214,20 +223,46 @@ namespace Wareship.Controllers
                     }
                 }
 
+                var address = new Address
+                {
+                    Name = model.Username,
+                    CityId = model.CityId,
+                    City = model.City,
+                    ProvinceId = model.ProvinceId,
+                    Province = model.Province
+                };
+
+                _context.Address.Add(address);
+                await _context.SaveChangesAsync();
+
+                var userAddress = new UserAddress
+                {
+                    AddressId = address.Id,
+                    UserId = user.Id,
+                    Role = "Rumah"
+                };
+
+                _context.UserAddress.Add(userAddress);
+                await _context.SaveChangesAsync();
+
                 var newUser = new UserDTO
                 {
-                    City = user.City,
-                    Email = user.Email,
-                    Name = user.Name,
-                    Phone = user.Phone,
-                    ProfilePictureUrl = user.ProfilePictureUrl,
-                    Province = user.Province,
-                    Street = user.Street,
-                    Subdistrict = user.Subdistrict,
-                    ZipCode = user.ZipCode,
+                    City = address.City,
+                    CityId = address.CityId,
+                    Province = address.Province,
+                    ProvinceId = address.ProvinceId,
+                    //Email = user.Email,
+                    //Name = user.Name,
+                    //Phone = user.Phone,
+                    //ProfilePictureUrl = user.ProfilePictureUrl,
+                    //Street = user.Street,
+                    //Subdistrict = user.Subdistrict,
+                    //ZipCode = user.ZipCode,
                     UserName = user.UserName,
                     UserStatusId = user.UserStatusId,
-                    UserTierId = user.UserTierId
+                    UserTierId = user.UserTierId,
+                    JoinDate = user.CreatedAt,
+                    JoinDateString = user.CreatedAt.ToString("dd-mm-yyyy")
                 };
 
                 stat.ResponseCode = StatusCodes.Status200OK;
@@ -305,15 +340,15 @@ namespace Wareship.Controllers
 
             var newUser = new UserDTO
             {
-                City = user.City,
+                //City = user.City,
                 Email = user.Email,
                 Name = user.Name,
-                Phone = user.Phone,
+                //Phone = user.Phone,
                 ProfilePictureUrl = user.ProfilePictureUrl,
-                Province = user.Province,
-                Street = user.Street,
-                Subdistrict = user.Subdistrict,
-                ZipCode = user.ZipCode,
+                //Province = user.Province,
+                //Street = user.Street,
+                //Subdistrict = user.Subdistrict,
+                //ZipCode = user.ZipCode,
                 UserName = user.UserName,
                 UserStatusId = user.UserStatusId,
                 UserTierId = user.UserTierId
@@ -355,20 +390,29 @@ namespace Wareship.Controllers
                 roleList.Add(role);
             }
 
+            var address = await _context.UserAddress
+                .Include(u => u.Address)
+                .AsSplitQuery()
+                .OrderBy(u => u.Id)
+                .SingleAsync(u => u.UserId == user.Id);
+
             stat.ResponseCode = StatusCodes.Status200OK;
             stat.ResponseMessage = "Success";
 
             resu.User = new UserDTO
             {
-                City = user.City,
                 Email = user.Email,
                 Name = user.Name,
-                Phone = user.Phone,
+                CityId = address.Address.CityId,
+                City = address.Address.City,
+                Phone = address.Address.Phone,
                 ProfilePictureUrl = user.ProfilePictureUrl,
-                Province = user.Province,
-                Street = user.Street,
-                Subdistrict = user.Subdistrict,
-                ZipCode = user.ZipCode,
+                ProvinceId = address.Address.ProvinceId,
+                Province = address.Address.Province,
+                Street = address.Address.Street,
+                SubdistrictId = address.Address.SubdistrictId,
+                Subdistrict = address.Address.Subdistrict,
+                ZipCode = address.Address.ZipCode,
                 UserName = user.UserName,
                 UserStatusId = user.UserStatusId,
                 UserTierId = user.UserTierId,

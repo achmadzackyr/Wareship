@@ -54,6 +54,28 @@ namespace Wareship.Controllers
 
             return Ok(resp);
         }
+
+        [HttpGet]
+        [Route("subdistrict/{id_kota}")]
+        public IActionResult GetAllSubdistrict(int id_kota)
+        {
+            var stat = new Status();
+            var resp = new SubdistrictResponse();
+
+            var client = new RestClient("https://dev.farizdotid.com/api/daerahindonesia/kecamatan?id_kota=" + id_kota);
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            IRestResponse response = client.Execute(request);
+            if (response.IsSuccessful)
+            {
+                stat.ResponseCode = StatusCodes.Status200OK;
+                stat.ResponseMessage = "Success";
+                resp.Status = stat;
+                resp.Result = JsonConvert.DeserializeObject<SubdistrictListResponse>(response.Content);
+            }
+
+            return Ok(resp);
+        }
     }
 
 

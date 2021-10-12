@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Wareship.Model.Users;
+using Wareship.Authentication;
 
-namespace Wareship.Model.Transactions
+namespace Wareship.Model.Users
 {
-    public class Shipper
+    public class UserAddress
     {
         public int Id { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public string CreatedBy { get; set; }
+        public string Role { get; set; }
+
+        //Relationship
+        public string UserId { get; set; }
+        [JsonIgnore]
+        public ApplicationUser User { get; set; }
 
         public int AddressId { get; set; }
         [JsonIgnore]
         public Address Address { get; set; }
-        [JsonIgnore]
-        public List<Transaction> Transactions { get; set; }
+
     }
 }

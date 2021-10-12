@@ -13,12 +13,6 @@ namespace Wareship.Authentication
     {
         public string Name { get; set; }
         public DateTime Dob { get; set; }
-        public string Street { get; set; }
-        public string Subdistrict { get; set; }
-        public string City { get; set; }
-        public string Province { get; set; }
-        public string ZipCode { get; set; }
-        public string Phone { get; set; }
         public string Gender { get; set; }
         public string ProfilePictureUrl { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -34,5 +28,6 @@ namespace Wareship.Authentication
 
         public List<Product> Products { get; set; }
         public List<Transaction> Transactions { get; set; }
+        public List<UserAddress> UserAddresses { get; set; }
     }
 }

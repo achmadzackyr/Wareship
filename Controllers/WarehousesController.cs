@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wareship.Authentication;
 using Wareship.Model.Stocks;
+using Wareship.Model.Users;
 using Wareship.ViewModel.Global;
 using Wareship.ViewModel.Warehouse;
 
@@ -29,16 +30,25 @@ namespace Wareship.Controllers
         public async Task<ActionResult<IEnumerable<Warehouse>>> GetWarehouse()
         {
             var warehouseList = await _context.Warehouse.ToListAsync();
-            var warehouseDTOList = warehouseList.Select(w => new WarehouseDTO
+            var wList = await _context.Warehouse
+                .Include(w => w.Address)
+                .AsSplitQuery()
+                .OrderBy(w => w.Id)
+                .ToListAsync();
+
+            var warehouseDTOList = warehouseList.Select(wList => new WarehouseDTO
             {
-                Id = w.Id,
-                Name = w.Name,
-                City = w.City,
-                Phone = w.Phone,
-                Province = w.Province,
-                Street = w.Street,
-                Subdistrict = w.Subdistrict,
-                ZipCode = w.ZipCode
+                Id = wList.Id,
+                Name = wList.Address.Name,
+                CityId = wList.Address.CityId,
+                City = wList.Address.City,
+                Phone = wList.Address.Phone,
+                ProvinceId = wList.Address.ProvinceId,
+                Province = wList.Address.Province,
+                Street = wList.Address.Street,
+                SubdistrictId = wList.Address.SubdistrictId,
+                Subdistrict = wList.Address.Subdistrict,
+                ZipCode = wList.Address.ZipCode
             }).ToList();
 
             var response = GenerateListResponse(StatusCodes.Status200OK, "Success", warehouseDTOList);
@@ -49,7 +59,11 @@ namespace Wareship.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Warehouse>> GetWarehouse(int id)
         {
-            var w = await _context.Warehouse.FindAsync(id);
+            var w = await _context.Warehouse
+                .Include(w => w.Address)
+                .AsSplitQuery()
+                .OrderBy(w => w.Id)
+                .SingleAsync(w => w.Id == id);
 
             if (w == null)
             {
@@ -59,13 +73,16 @@ namespace Wareship.Controllers
             var warehouseDTO = new WarehouseDTO
             {
                 Id = w.Id,
-                Name = w.Name,
-                City = w.City,
-                Phone = w.Phone,
-                Province = w.Province,
-                Street = w.Street,
-                Subdistrict = w.Subdistrict,
-                ZipCode = w.ZipCode
+                Name = w.Address.Name,
+                CityId = w.Address.CityId,
+                City = w.Address.City,
+                Phone = w.Address.Phone,
+                ProvinceId = w.Address.ProvinceId,
+                Province = w.Address.Province,
+                Street = w.Address.Street,
+                SubdistrictId = w.Address.SubdistrictId,
+                Subdistrict = w.Address.Subdistrict,
+                ZipCode = w.Address.ZipCode
             };
 
             var response = GenerateResponse(StatusCodes.Status200OK, "Success", warehouseDTO);
@@ -86,33 +103,36 @@ namespace Wareship.Controllers
 
             try
             {
-                var warehouse = new Warehouse
+                var w = await _context.Warehouse.FindAsync(id);
+                var address = new Address
                 {
-                    Id = request.Id,
+                    Id = w.AddressId,
                     Name = request.Name,
+                    CityId = request.CityId,
                     City = request.City,
                     Phone = request.Phone,
+                    ProvinceId = request.ProvinceId,
                     Province = request.Province,
                     Street = request.Street,
+                    SubdistrictId = request.SubdistrictId,
                     Subdistrict = request.Subdistrict,
                     ZipCode = request.ZipCode
                 };
 
-                _context.Entry(warehouse).State = EntityState.Modified;
+                _context.Entry(address).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 var warehouseDTO = new WarehouseDTO
                 {
-                    Id = warehouse.Id,
-                    Name = warehouse.Name,
-                    City = warehouse.City,
-                    Phone = warehouse.Phone,
-                    Province = warehouse.Province,
-                    Street = warehouse.Street,
-                    Subdistrict = warehouse.Subdistrict,
-                    ZipCode = warehouse.ZipCode
+                    Id = w.Id,
+                    Name = address.Name,
+                    City = address.City,
+                    Phone = address.Phone,
+                    Province = address.Province,
+                    Street = address.Street,
+                    Subdistrict = address.Subdistrict,
+                    ZipCode = address.ZipCode
                 };
-
                 return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", warehouseDTO));
             }
             catch (DbUpdateConcurrencyException)
@@ -136,15 +156,26 @@ namespace Wareship.Controllers
         {
             if (ModelState.IsValid)
             {
-                var warehouse = new Warehouse
+                var address = new Address
                 {
                     Name = request.Name,
+                    CityId = request.CityId,
                     City = request.City,
                     Phone = request.Phone,
+                    ProvinceId = request.ProvinceId,
                     Province = request.Province,
                     Street = request.Street,
+                    SubdistrictId = request.SubdistrictId,
                     Subdistrict = request.Subdistrict,
                     ZipCode = request.ZipCode
+                };
+
+                _context.Address.Add(address);
+                await _context.SaveChangesAsync();
+
+                var warehouse = new Warehouse
+                {
+                    AddressId = address.Id
                 };
 
                 try
@@ -155,13 +186,16 @@ namespace Wareship.Controllers
                     var warehouseDTO = new WarehouseDTO
                     {
                         Id = warehouse.Id,
-                        Name = warehouse.Name,
-                        City = warehouse.City,
-                        Phone = warehouse.Phone,
-                        Province = warehouse.Province,
-                        Street = warehouse.Street,
-                        Subdistrict = warehouse.Subdistrict,
-                        ZipCode = warehouse.ZipCode
+                        Name = address.Name,
+                        CityId = address.CityId,
+                        City = address.City,
+                        Phone = address.Phone,
+                        ProvinceId = address.ProvinceId,
+                        Province = address.Province,
+                        Street = address.Street,
+                        SubdistrictId = address.SubdistrictId,
+                        Subdistrict = address.Subdistrict,
+                        ZipCode = address.ZipCode
                     };
 
                     return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", warehouseDTO));

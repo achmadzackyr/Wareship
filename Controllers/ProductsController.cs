@@ -65,19 +65,6 @@ namespace Wareship.Controllers
             return Ok(response);
         }
 
-        //private VariationDTO GetOptionVariation(int variationId)
-        //{
-        //    var variation = _context.Variation
-        //        .Where(p => p.Id == variationId)
-        //        .Select(p => new VariationDTO
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name
-        //        })
-        //        .FirstOrDefault();
-        //    return variation;
-        //}
-
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
@@ -116,14 +103,14 @@ namespace Wareship.Controllers
                 UserId = p.UserId,
                 User = new UserDTO
                 {
-                    City = p.User.City,
+                    //City = p.User.City,
                     Name = p.User.Name,
-                    Phone = p.User.Phone,
+                    //Phone = p.User.Phone,
                     ProfilePictureUrl = p.User.ProfilePictureUrl,
-                    Province = p.User.Province,
-                    Street = p.User.Street,
-                    Subdistrict = p.User.Subdistrict,
-                    ZipCode = p.User.ZipCode
+                    //Province = p.User.Province,
+                    //Street = p.User.Street,
+                    //Subdistrict = p.User.Subdistrict,
+                    //ZipCode = p.User.ZipCode
                 },
                 ProductStatusId = p.ProductStatusId,
                 SubCategory = new SubCategoryDTO
@@ -168,13 +155,13 @@ namespace Wareship.Controllers
                     Warehouse = new WarehouseDTO
                     {
                         Id = p.Warehouse.Id,
-                        Name = p.Warehouse.Name,
-                        City = p.Warehouse.City,
-                        Subdistrict = p.Warehouse.Subdistrict,
-                        Phone = p.Warehouse.Phone,
-                        Province = p.Warehouse.Province,
-                        Street = p.Warehouse.Street,
-                        ZipCode = p.Warehouse.ZipCode
+                        //Name = p.Warehouse.Name,
+                        //City = p.Warehouse.City,
+                        //Subdistrict = p.Warehouse.Subdistrict,
+                        //Phone = p.Warehouse.Phone,
+                        //Province = p.Warehouse.Province,
+                        //Street = p.Warehouse.Street,
+                        //ZipCode = p.Warehouse.ZipCode
                     }
                 })
                 .ToList()
@@ -328,14 +315,14 @@ namespace Wareship.Controllers
                     UserId = p.UserId,
                     User = new UserDTO
                     {
-                        City = p.User.City,
+                        //City = p.User.City,
                         Name = p.User.Name,
-                        Phone = p.User.Phone,
+                        //Phone = p.User.Phone,
                         ProfilePictureUrl = p.User.ProfilePictureUrl,
-                        Province = p.User.Province,
-                        Street = p.User.Street,
-                        Subdistrict = p.User.Subdistrict,
-                        ZipCode = p.User.ZipCode
+                        //Province = p.User.Province,
+                        //Street = p.User.Street,
+                        //Subdistrict = p.User.Subdistrict,
+                        //ZipCode = p.User.ZipCode
                     },
                     ProductStatusId = p.ProductStatusId,
                     SubCategory = new SubCategoryDTO
@@ -380,13 +367,13 @@ namespace Wareship.Controllers
                         Warehouse = new WarehouseDTO
                         {
                             Id = p.Warehouse.Id,
-                            Name = p.Warehouse.Name,
-                            City = p.Warehouse.City,
-                            Subdistrict = p.Warehouse.Subdistrict,
-                            Phone = p.Warehouse.Phone,
-                            Province = p.Warehouse.Province,
-                            Street = p.Warehouse.Street,
-                            ZipCode = p.Warehouse.ZipCode
+                            //Name = p.Warehouse.Name,
+                            //City = p.Warehouse.City,
+                            //Subdistrict = p.Warehouse.Subdistrict,
+                            //Phone = p.Warehouse.Phone,
+                            //Province = p.Warehouse.Province,
+                            //Street = p.Warehouse.Street,
+                            //ZipCode = p.Warehouse.ZipCode
                         }
                     })
                     .ToList()

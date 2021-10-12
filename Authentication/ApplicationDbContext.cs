@@ -24,6 +24,7 @@ namespace Wareship.Authentication
             this.SeedUserStatus(builder);
             this.SeedUserTier(builder);
             this.SeedRoles(builder);
+            this.SeedAddress(builder);
             this.SeedProductStatus(builder);
             this.SeedCategory(builder);
             this.SeedSubCategory(builder);
@@ -39,6 +40,7 @@ namespace Wareship.Authentication
 
             this.SeedUsers(builder);
             this.SeedUserRoles(builder);
+            this.SeedUserAddress(builder);
             this.SeedProduct(builder);
             this.SeedProductImage(builder);
             this.SeedStock(builder);
@@ -89,6 +91,11 @@ namespace Wareship.Authentication
             builder.Entity<Transaction>()
             .HasOne(p => p.Shipper)
             .WithMany(b => b.Transactions);
+
+            builder.Entity<Shipper>()
+            .HasOne(s => s.Address)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Restrict);
         }
 
         private void SeedConsignee(ModelBuilder builder)
@@ -96,6 +103,11 @@ namespace Wareship.Authentication
             builder.Entity<Transaction>()
             .HasOne(p => p.Consignee)
             .WithMany(b => b.Transactions);
+
+            builder.Entity<Consignee>()
+            .HasOne(s => s.Address)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Restrict);
         }
 
         private void SeedPayment(ModelBuilder builder)
@@ -168,19 +180,10 @@ namespace Wareship.Authentication
             .HasOne(p => p.Warehouse)
             .WithMany(b => b.Stocks);
 
-            builder.Entity<Warehouse>().HasData(
-                new Warehouse
-                {
-                    Id = 1, 
-                    Name = "Warehouse JNE Tasikmalaya",
-                    Street = "Jl. Ir. H. Juanda No.21, RW.1, Cipedes",
-                    Subdistrict = "Cipedes",
-                    City = "Kota Tasikmalaya",
-                    Province = "Jawa Barat",
-                    ZipCode = "46151",
-                    Phone = ""
-                }
-                );
+            builder.Entity<Warehouse>()
+            .HasOne(s => s.Address)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Restrict);
         }
 
         private void SeedOption(ModelBuilder builder)
@@ -336,11 +339,72 @@ namespace Wareship.Authentication
                 );
         }
 
+        private void SeedAddress(ModelBuilder builder)
+        {
+            builder.Entity<UserAddress>()
+            .HasOne(p => p.Address)
+            .WithMany(b => b.UserAddresses);
+
+            builder.Entity<Address>().HasData(
+                new Address { 
+                    Id = 1,
+                    Name = "Admin Suradmin",
+                    Street = "Dusun Desa, Desa Cijeungjing",
+                    SubdistrictId = 3207150,
+                    Subdistrict = "Cijeungjing",
+                    CityId = 3207,
+                    City = "Kabupaten Ciamis",
+                    ProvinceId = 32,
+                    Province = "Jawa Barat",
+                    ZipCode = "46271",
+                    Phone = "085223670378"
+                },
+                new Address
+                {
+                    Id = 2,
+                    Name = "Warehouse JNE Tasikmalaya",
+                    Street = "Jl. Ir. H. Juanda No.21, RW.1, Cipedes",
+                    SubdistrictId = 3278080,
+                    Subdistrict = "Cipedes",
+                    CityId = 3278,
+                    City = "Kota Tasikmalaya",
+                    ProvinceId = 32,
+                    Province = "Jawa Barat",
+                    ZipCode = "46151",
+                    Phone = ""
+                }
+            );
+        }
+
+        private void SeedUserAddress(ModelBuilder builder)
+        {
+            builder.Entity<UserAddress>().HasData(
+                new UserAddress
+                {
+                    Id = 1,
+                    AddressId = 1,
+                    UserId = "b74ddd14-6340-4840-95c2-db12554843e5",
+                    Role = "Rumah"
+                },
+                new UserAddress
+                {
+                    Id = 2,
+                    AddressId = 1,
+                    UserId = "supplier-6340-4840-95c2-db12554843e5",
+                    Role = "Kantor"
+                }
+            );
+        }
+
         private void SeedUsers(ModelBuilder builder)
         {
             builder.Entity<Product>()
             .HasOne(p => p.User)
             .WithMany(b => b.Products);
+
+            builder.Entity<UserAddress>()
+            .HasOne(p => p.User)
+            .WithMany(b => b.UserAddresses);
 
             var hasher = new PasswordHasher<ApplicationUser>();
 
@@ -357,10 +421,6 @@ namespace Wareship.Authentication
                         Name = "Admin Suradmin",
                         PhoneNumber = "085223670378",
                         Dob = Convert.ToDateTime("1989-12-07"),
-                        Street = "Dusun Desa, Desa Cijeungjing",
-                        Subdistrict = "Cijeungjing",
-                        City = "Kabupaten Ciamis",
-                        Province = "Jawa Barat",
                         Gender = "Laki-Laki",
                         ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                         CreatedAt = DateTime.Now,
@@ -380,10 +440,6 @@ namespace Wareship.Authentication
                         Name = "Susu Plier",
                         PhoneNumber = "085223670378",
                         Dob = Convert.ToDateTime("1989-12-07"),
-                        Street = "Dusun Desa, Desa Cijeungjing",
-                        Subdistrict = "Cijeungjing",
-                        City = "Kabupaten Ciamis",
-                        Province = "Jawa Barat",
                         Gender = "Laki-Laki",
                         ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                         CreatedAt = DateTime.Now,
@@ -422,5 +478,8 @@ namespace Wareship.Authentication
         public DbSet<Wareship.Model.Stocks.Option> Option { get; set; }
         public DbSet<Wareship.Model.Stocks.Variation> Variation { get; set; }
         public DbSet<Wareship.Model.Transactions.Courier> Courier { get; set; }
+        public DbSet<Wareship.Model.Users.Address> Address { get; set; }
+        public DbSet<Wareship.Model.Users.UserAddress> UserAddress { get; set; }
+
     }
 }

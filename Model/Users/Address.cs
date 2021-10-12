@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Wareship.Model.Transactions;
 
-namespace Wareship.ViewModel.Auth
+namespace Wareship.Model.Users
 {
-    public class UserDTO
+    public class Address
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Street { get; set; }
         public int SubdistrictId { get; set; }
@@ -17,12 +20,9 @@ namespace Wareship.ViewModel.Auth
         public string Province { get; set; }
         public string ZipCode { get; set; }
         public string Phone { get; set; }
-        public string ProfilePictureUrl { get; set; }
-        public string Email { get; set; }
-        public string UserName { get; set; }
-        public DateTime JoinDate { get; set; }
-        public string JoinDateString { get; set; }
-        public int UserStatusId { get; set; }
-        public int UserTierId { get; set; }
+
+        //Relationship
+        [JsonIgnore]
+        public List<UserAddress> UserAddresses { get; set; }
     }
 }
