@@ -42,9 +42,7 @@ namespace Wareship.ViewModel.Auth
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
         public List<string> RoleNames { get; set; }
-        [Required(ErrorMessage = "UserStatusId is required")]
         public int UserStatusId { get; set; }
-        [Required(ErrorMessage = "UserTierId is required")]
         public int UserTierId { get; set; }
     }
 }

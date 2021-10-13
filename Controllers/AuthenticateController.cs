@@ -141,6 +141,7 @@ namespace Wareship.Controllers
             
         //}
 
+        //Register dropshipper
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestModel model)
@@ -181,9 +182,9 @@ namespace Wareship.Controllers
                     //PhoneNumber = model.PhoneNumber,
                     //ProfilePictureUrl = model.ProfilePictureUrl,
                     CreatedAt = DateTime.Now,
-                    CreatedBy = null,
-                    UserStatusId = model.UserStatusId,
-                    UserTierId = model.UserTierId
+                    CreatedBy = model.CreatedBy,
+                    UserStatusId = 1,
+                    UserTierId = 1
                 };
 
                 var result = await userManager.CreateAsync(user, model.Password);
@@ -205,10 +206,10 @@ namespace Wareship.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, resp);
                 }
 
-                foreach (var role in model.RoleNames) {
+                // foreach (var role in model.RoleNames) {
                     try
                     {
-                        await userManager.AddToRoleAsync(user, role);
+                        await userManager.AddToRoleAsync(user, "Dropshipper");
                     } catch
                     {
                         stat.ResponseCode = StatusCodes.Status500InternalServerError;
@@ -221,7 +222,7 @@ namespace Wareship.Controllers
                         await userManager.DeleteAsync(user);
                         return StatusCode(StatusCodes.Status500InternalServerError, resp);
                     }
-                }
+                // }
 
                 var address = new Address
                 {
