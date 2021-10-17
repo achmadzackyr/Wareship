@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Wareship.Authentication;
 using Wareship.Model.Stocks;
+using Wareship.Model.Users;
 
 namespace Wareship.Model.Products
 {
@@ -29,6 +30,10 @@ namespace Wareship.Model.Products
         public int SubCategoryId { get; set; }
         [JsonIgnore]
         public SubCategory SubCategory { get; set; }
+        public int SupplierId { get; set; }
+        [JsonIgnore]
+        public Supplier Supplier { get; set; }
+
         [JsonIgnore]
         public List<Stock> Stocks { get; set; }
         [JsonIgnore]

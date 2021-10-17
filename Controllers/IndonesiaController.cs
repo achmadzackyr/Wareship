@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestSharp;
+using System.Collections.Generic;
 using Wareship.ViewModel.Global;
 using Wareship.ViewModel.Indonesia;
 
@@ -24,10 +25,25 @@ namespace Wareship.Controllers
             IRestResponse response = client.Execute(request);
             if(response.IsSuccessful)
             {
+                var orderedProvList = new List<Provinsi>();
+                var provList = JsonConvert.DeserializeObject<ProvinceListResponse>(response.Content);
+                var result = new ProvinceListResponse();
+                
+                foreach(var p in provList.Provinsi)
+                {
+                    orderedProvList.Add(p);
+                }
+                orderedProvList.Sort(delegate (Provinsi x, Provinsi y) {
+                    return x.Nama.CompareTo(y.Nama);
+                });
+
+                result.Provinsi = orderedProvList;
+
                 stat.ResponseCode = StatusCodes.Status200OK;
                 stat.ResponseMessage = "Success";
                 resp.Status = stat;
-                resp.Result = JsonConvert.DeserializeObject<ProvinceListResponse>(response.Content);
+                resp.Result = result;
+                //resp.Result = provList;
             }
             
             return Ok(resp);

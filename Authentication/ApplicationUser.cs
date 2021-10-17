@@ -29,5 +29,6 @@ namespace Wareship.Authentication
         public List<Product> Products { get; set; }
         public List<Transaction> Transactions { get; set; }
         public List<UserAddress> UserAddresses { get; set; }
+        public List<Supplier> Suppliers { get; set; }
     }
 }

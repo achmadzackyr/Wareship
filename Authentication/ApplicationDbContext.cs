@@ -41,6 +41,7 @@ namespace Wareship.Authentication
             this.SeedUsers(builder);
             this.SeedUserRoles(builder);
             this.SeedUserAddress(builder);
+            this.SeedSupplier(builder);
             this.SeedProduct(builder);
             this.SeedProductImage(builder);
             this.SeedStock(builder);
@@ -51,6 +52,43 @@ namespace Wareship.Authentication
             this.SeedUserTransaction(builder);
         }
 
+        private void SeedSupplier(ModelBuilder builder)
+        {
+            builder.Entity<Supplier>()
+            .HasOne(s => s.Address)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Supplier>()
+            .HasOne(p => p.SubCategory)
+            .WithMany(b => b.Suppliers);
+
+            builder.Entity<Supplier>()
+            .HasOne(p => p.CreatedBy)
+            .WithMany(b => b.Suppliers);
+
+            builder.Entity<Supplier>()
+            .HasOne(p => p.UserStatus)
+            .WithMany(b => b.Suppliers);
+
+            builder.Entity<Product>()
+            .HasOne(p => p.Supplier)
+            .WithMany(b => b.Products);
+
+            builder.Entity<Supplier>().HasData(
+                new Supplier { 
+                    AddressId = 8,
+                    CreatedById = "b74ddd14-6340-4840-95c2-db12554843e5",
+                    UserStatusId = 1,
+                    SubCategoryId = 1,
+                    Id = 1,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    Brand = "Amazaki",
+                    Markup = 20
+                }
+                );
+        }
 
         private void SeedCart(ModelBuilder builder)
         {
@@ -263,12 +301,13 @@ namespace Wareship.Authentication
                 {
                     ProductStatusId = 1,
                     SubCategoryId = 1,
+                    SupplierId = 1,
                     Id = i,
                     Name = "Kamus Bahasa Inggris 1 Juta Kata",
                     Description = "Kamus Bahasa Inggris ini paling lengkap dan paling murah diantara yang lainnya",
                     Price = 100000.00,
                     Sku = "A00" + i,
-                    UserId = "supplier-6340-4840-95c2-db12554843e5",
+                    UserId = "b74ddd14-6340-4840-95c2-db12554843e5",
                     Volume = 1,
                     Weight = 1,
                     ChargeableWeight = 1
@@ -283,7 +322,8 @@ namespace Wareship.Authentication
         {
             builder.Entity<Product>()
             .HasOne(p => p.ProductStatus)
-            .WithMany(b => b.Products);
+            .WithMany(b => b.Products)
+            .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<ProductStatus>().HasData(
                 new ProductStatus { Id = 1, Name = "Active" },
@@ -316,7 +356,8 @@ namespace Wareship.Authentication
         {
             builder.Entity<Product>()
             .HasOne(p => p.SubCategory)
-            .WithMany(b => b.Products);
+            .WithMany(b => b.Products)
+            .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<SubCategory>().HasData(
                 new SubCategory { Id = 1, Name = "Kamus", CategoryId = 1 },
@@ -402,6 +443,20 @@ namespace Wareship.Authentication
                     Province = "Jawa Barat",
                     ZipCode = "46151",
                     Phone = ""
+                },
+                new Address
+                {
+                    Id = 8,
+                    Name = "Amazaki",
+                    Street = "Dusun Desa, Desa Cijeungjing",
+                    SubdistrictId = 3207150,
+                    Subdistrict = "Cijeungjing",
+                    CityId = 3207,
+                    City = "Kabupaten Ciamis",
+                    ProvinceId = 32,
+                    Province = "Jawa Barat",
+                    ZipCode = "46271",
+                    Phone = "085223670378"
                 }
             );
         }
@@ -510,6 +565,7 @@ namespace Wareship.Authentication
         public DbSet<Wareship.Model.Transactions.Courier> Courier { get; set; }
         public DbSet<Wareship.Model.Users.Address> Address { get; set; }
         public DbSet<Wareship.Model.Users.UserAddress> UserAddress { get; set; }
+        public DbSet<Wareship.Model.Users.Supplier> Supplier { get; set; }
 
     }
 }
