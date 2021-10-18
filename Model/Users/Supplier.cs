@@ -12,6 +12,7 @@ namespace Wareship.Model.Users
     {
         public int Id { get; set; }
         public string Brand { get; set; }
+        public string Email { get; set; }
         public double Markup { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

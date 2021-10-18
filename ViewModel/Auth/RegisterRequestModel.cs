@@ -37,6 +37,7 @@ namespace Wareship.ViewModel.Auth
         public int ProvinceId { get; set; }
         [Required(ErrorMessage = "Province is required")]
         public string Province { get; set; }
+        public string ZipCode { get; set; }
         public string Gender { get; set; }
         public string ProfilePictureUrl { get; set; }
         public DateTime CreatedAt { get; set; }

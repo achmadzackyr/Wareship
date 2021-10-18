@@ -85,7 +85,8 @@ namespace Wareship.Authentication
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
                     Brand = "Amazaki",
-                    Markup = 20
+                    Markup = 20,
+                    Email = "digisolutionasia@gmail.com"
                 }
                 );
         }
