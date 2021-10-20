@@ -25,6 +25,7 @@ namespace Wareship.ViewModel.Auth
         public string ZipCode { get; set; }
         public string Phone { get; set; }
 
+        public int AddressId { get; set; }
         public string CreatedById { get; set; }
         public string CreatedByName { get; set; }
         public int UserStatusId { get; set; }

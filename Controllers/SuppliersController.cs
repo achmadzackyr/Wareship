@@ -29,6 +29,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/Suppliers
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Supplier>>> GetSupplier()
         {
@@ -51,6 +52,7 @@ namespace Wareship.Controllers
                 UpdatedAt = s.UpdatedAt,
                 
                 //Address
+                AddressId = s.Address.Id,
                 Name = s.Address.Name,
                 Street = s.Address.Street,
                 Province = s.Address.Province,
@@ -78,6 +80,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/Suppliers/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Supplier>> GetSupplier(int id)
         {
@@ -105,6 +108,7 @@ namespace Wareship.Controllers
                 UpdatedAt = s.UpdatedAt,
 
                 //Address
+                AddressId = s.Address.Id,
                 Name = s.Address.Name,
                 Street = s.Address.Street,
                 Province = s.Address.Province,
@@ -132,33 +136,117 @@ namespace Wareship.Controllers
 
         // PUT: api/Suppliers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSupplier(int id, Supplier supplier)
+        public async Task<IActionResult> PutSupplier(int id, [FromBody] RegisterSupplierRequestModel request)
         {
-            if (id != supplier.Id)
+            if (id != request.Id)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status400BadRequest, GenerateResponse(StatusCodes.Status400BadRequest, "Supplier Id did not match with url", null));
             }
-
-            _context.Entry(supplier).State = EntityState.Modified;
-
             try
             {
+                var checkSupplier = await _context.Supplier.FindAsync(id);
+                if(checkSupplier == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, GenerateResponse(StatusCodes.Status404NotFound, "Supplier Not Found", null));
+                } else
+                {
+                    _context.Entry(checkSupplier).State = EntityState.Detached;
+                }
+
+                var supplier = new Supplier
+                {
+                    Id = request.Id,
+                    Brand = request.Brand,
+                    Email = request.Email,
+                    Markup = request.Markup,
+                    UpdatedAt = DateTime.Now,
+                    UserStatusId = request.UserStatusId,
+                    SubCategoryId = request.SubCategoryId,
+
+                    //unchangeable
+                    AddressId = checkSupplier.AddressId,
+                    CreatedAt = checkSupplier.CreatedAt,
+                    CreatedById = checkSupplier.CreatedById
+                };
+                _context.Entry(supplier).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                
+                var address = new Address
+                {
+                    Id = checkSupplier.AddressId,
+                    Name = request.Name,
+                    Phone = request.PhoneNumber,
+                    ProvinceId = request.ProvinceId,
+                    Province = request.Province,
+                    CityId = request.CityId,
+                    City = request.City,
+                    SubdistrictId = request.SubdistrictId,
+                    Subdistrict = request.Subdistrict,
+                    Street = request.Street,
+                    ZipCode = request.ZipCode
+                };
+
+                _context.Entry(address).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                var s = await _context.Supplier
+                .Where(p => p.Id == id)
+                .Include(s => s.Address)
+                .Include(s => s.CreatedBy)
+                .Include(s => s.UserStatus)
+                .Include(s => s.SubCategory)
+                .ThenInclude(s => s.Category)
+                .FirstOrDefaultAsync();
+
+                var supplierDTO = new SupplierDTO
+                {
+                    Id = s.Id,
+                    Brand = s.Brand,
+                    Markup = s.Markup,
+                    Email = s.Email,
+                    CreatedAt = s.CreatedAt,
+                    CreatedAtString = s.CreatedAt.ToString("dd-MM-yyyy"),
+                    UpdatedAt = s.UpdatedAt,
+
+                    //Address
+                    AddressId = s.Address.Id,
+                    Name = s.Address.Name,
+                    Street = s.Address.Street,
+                    Province = s.Address.Province,
+                    ProvinceId = s.Address.ProvinceId,
+                    City = s.Address.City,
+                    CityId = s.Address.CityId,
+                    Subdistrict = s.Address.Subdistrict,
+                    SubdistrictId = s.Address.SubdistrictId,
+                    ZipCode = s.Address.ZipCode,
+                    Phone = s.Address.Phone,
+
+                    //Relation
+                    CategoryId = s.SubCategory.Category.Id,
+                    CategoryName = s.SubCategory.Category.Name,
+                    SubCategoryId = s.SubCategory.Id,
+                    SubCategoryName = s.SubCategory.Name,
+                    CreatedById = s.CreatedBy.Id,
+                    CreatedByName = s.CreatedBy.Name,
+                    UserStatusId = s.UserStatus.Id,
+                    UserStatusName = s.UserStatus.Name
+                };
+
+                return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", supplierDTO));
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!SupplierExists(id))
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, GenerateResponse(StatusCodes.Status404NotFound, "Supplier Not Found", null));
                 }
                 else
                 {
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/Suppliers
@@ -264,19 +352,26 @@ namespace Wareship.Controllers
         }
 
         // DELETE: api/Suppliers/5
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSupplier(int id)
         {
             var supplier = await _context.Supplier.FindAsync(id);
             if (supplier == null)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status404NotFound, GenerateResponse(StatusCodes.Status404NotFound, "Supplier Not Found", null));
             }
 
             _context.Supplier.Remove(supplier);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            var isSuccess = await _context.SaveChangesAsync();
+            if (isSuccess > 0)
+            {
+                return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", null));
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, "Failed to delete", null));
+            }
         }
 
         private bool SupplierExists(int id)

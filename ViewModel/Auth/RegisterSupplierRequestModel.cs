@@ -8,6 +8,7 @@ namespace Wareship.ViewModel.Auth
 {
     public class RegisterSupplierRequestModel
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "Brand is required")]
         public string Brand { get; set; }
 
@@ -21,6 +22,7 @@ namespace Wareship.ViewModel.Auth
         public DateTime UpdatedAt { get; set; }
 
         //Address
+        public int AddressId { get; set; }
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
         [Phone]
