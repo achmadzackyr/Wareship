@@ -43,7 +43,7 @@ namespace Wareship.ViewModel.Auth
         [Required(ErrorMessage = "Province is required")]
         public string Province { get; set; }
         [Required(ErrorMessage = "Zip Code is required")]
-        public string ZipCode { get; set; }
+        public int ZipCode { get; set; }
 
         //Relation
         [Required(ErrorMessage = "User Status Id is required")]

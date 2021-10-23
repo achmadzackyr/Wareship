@@ -185,7 +185,7 @@ namespace Wareship.Controllers
                     SubdistrictId = request.SubdistrictId,
                     Subdistrict = request.Subdistrict,
                     Street = request.Street,
-                    ZipCode = request.ZipCode
+                    ZipCode = request.ZipCode.ToString()
                 };
 
                 _context.Entry(address).State = EntityState.Modified;
@@ -276,7 +276,7 @@ namespace Wareship.Controllers
                     SubdistrictId = req.SubdistrictId,
                     Phone = req.PhoneNumber,
                     Street = req.Street,
-                    ZipCode = req.ZipCode
+                    ZipCode = req.ZipCode.ToString()
                 };
 
                 _context.Address.Add(address);
