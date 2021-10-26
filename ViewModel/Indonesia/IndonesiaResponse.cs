@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Wareship.Model.Indonesia;
 using Wareship.ViewModel.Global;
 
 namespace Wareship.ViewModel.Indonesia
@@ -14,13 +15,7 @@ namespace Wareship.ViewModel.Indonesia
 
     public partial class ProvinceListResponse
     {
-        public List<Provinsi> Provinsi { get; set; }
-    }
-
-    public partial class Provinsi
-    {
-        public long Id { get; set; }
-        public string Nama { get; set; }
+        public List<Provinces> Provinces { get; set; }
     }
 
     public partial class CityResponse
@@ -31,30 +26,18 @@ namespace Wareship.ViewModel.Indonesia
 
     public partial class CityListResponse
     {
-        public List<KotaKabupaten> Kota_Kabupaten { get; set; }
+        public List<Regencies> Cities { get; set; }
     }
 
-    public partial class KotaKabupaten
-    {
-        public long Id { get; set; }
-        public long Id_Provinsi { get; set; }
-        public string Nama { get; set; }
-    }
-    public partial class SubdistrictResponse
+    
+    public partial class SubDistrictResponse
     {
         public Status Status { get; set; }
-        public SubdistrictListResponse Result { get; set; }
+        public SubDistrictListResponse Result { get; set; }
     }
 
-    public partial class SubdistrictListResponse
+    public partial class SubDistrictListResponse
     {
-        public List<Kecamatan> Kecamatan { get; set; }
-    }
-
-    public partial class Kecamatan
-    {
-        public long Id { get; set; }
-        public long Id_Kota { get; set; }
-        public string Nama { get; set; }
+        public List<SubDistricts> SubDistricts { get; set; }
     }
 }

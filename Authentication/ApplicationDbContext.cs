@@ -9,6 +9,7 @@ using Wareship.Model.Products;
 using Wareship.Model.Stocks;
 using Wareship.Model.Transactions;
 using Wareship.Model.Users;
+using Wareship.Model.Indonesia;
 
 namespace Wareship.Authentication
 {
@@ -38,6 +39,9 @@ namespace Wareship.Authentication
             this.SeedShipper(builder);
             this.SeedConsignee(builder);
 
+            this.SeedRegency(builder);
+            this.SeedSubDistrict(builder);
+
             this.SeedUsers(builder);
             this.SeedUserRoles(builder);
             this.SeedUserAddress(builder);
@@ -50,6 +54,20 @@ namespace Wareship.Authentication
             this.SeedTransaction(builder);
             this.SeedOrder(builder);
             this.SeedUserTransaction(builder);
+        }
+
+        private void SeedRegency(ModelBuilder builder)
+        {
+            builder.Entity<Regencies>()
+            .HasOne(p => p.Province)
+            .WithMany(b => b.Regencies);
+        }
+
+        private void SeedSubDistrict(ModelBuilder builder)
+        {
+            builder.Entity<SubDistricts>()
+            .HasOne(p => p.Regency)
+            .WithMany(b => b.SubDistricts);
         }
 
         private void SeedSupplier(ModelBuilder builder)
@@ -567,6 +585,9 @@ namespace Wareship.Authentication
         public DbSet<Wareship.Model.Users.Address> Address { get; set; }
         public DbSet<Wareship.Model.Users.UserAddress> UserAddress { get; set; }
         public DbSet<Wareship.Model.Users.Supplier> Supplier { get; set; }
+        public DbSet<Wareship.Model.Indonesia.Provinces> Provinces { get; set; }
+        public DbSet<Wareship.Model.Indonesia.Regencies> Regencies { get; set; }
+        public DbSet<Wareship.Model.Indonesia.SubDistricts> SubDistricts { get; set; }
 
     }
 }

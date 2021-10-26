@@ -1,8 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RestSharp;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Wareship.Authentication;
+using Wareship.Model.Indonesia;
 using Wareship.ViewModel.Global;
 using Wareship.ViewModel.Indonesia;
 
@@ -12,83 +17,66 @@ namespace Wareship.Controllers
     [ApiController]
     public class IndonesiaController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
+
+        public IndonesiaController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         [Route("province")]
-        public IActionResult GetAllProvince()
+        public async Task<ActionResult<IEnumerable<Provinces>>> GetAllProvince()
         {
             var stat = new Status();
             var resp = new ProvinceResponse();
-
-            var client = new RestClient("https://dev.farizdotid.com/api/daerahindonesia/provinsi");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = client.Execute(request);
-            if(response.IsSuccessful)
+            var result = new ProvinceListResponse
             {
-                var orderedProvList = new List<Provinsi>();
-                var provList = JsonConvert.DeserializeObject<ProvinceListResponse>(response.Content);
-                var result = new ProvinceListResponse();
-                
-                foreach(var p in provList.Provinsi)
-                {
-                    orderedProvList.Add(p);
-                }
-                orderedProvList.Sort(delegate (Provinsi x, Provinsi y) {
-                    return x.Nama.CompareTo(y.Nama);
-                });
+                Provinces = await _context.Provinces.OrderBy(x => x.Name).ToListAsync()
+            };
 
-                result.Provinsi = orderedProvList;
-
-                stat.ResponseCode = StatusCodes.Status200OK;
-                stat.ResponseMessage = "Success";
-                resp.Status = stat;
-                resp.Result = result;
-                //resp.Result = provList;
-            }
+            stat.ResponseCode = StatusCodes.Status200OK;
+            stat.ResponseMessage = "Success";
+            resp.Status = stat;
+            resp.Result = result;
             
             return Ok(resp);
         }
 
         [HttpGet]
-        [Route("city/{id_provinsi}")]
-        public IActionResult GetAllCity(int id_provinsi)
+        [Route("city/{ProvinceId}")]
+        public async Task<ActionResult<IEnumerable<Regencies>>> GetAllCity(string ProvinceId)
         {
             var stat = new Status();
             var resp = new CityResponse();
-
-            var client = new RestClient("https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=" + id_provinsi);
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = client.Execute(request);
-            if (response.IsSuccessful)
+            var result = new CityListResponse
             {
-                stat.ResponseCode = StatusCodes.Status200OK;
-                stat.ResponseMessage = "Success";
-                resp.Status = stat;
-                resp.Result = JsonConvert.DeserializeObject<CityListResponse>(response.Content);
-            }
+                Cities = await _context.Regencies.Where(x => x.ProvinceId == ProvinceId).OrderBy(x => x.Name).ToListAsync()
+            };
+
+            stat.ResponseCode = StatusCodes.Status200OK;
+            stat.ResponseMessage = "Success";
+            resp.Status = stat;
+            resp.Result = result;
 
             return Ok(resp);
         }
 
         [HttpGet]
-        [Route("subdistrict/{id_kota}")]
-        public IActionResult GetAllSubdistrict(int id_kota)
+        [Route("subdistrict/{CityId}")]
+        public async Task<ActionResult<IEnumerable<SubDistricts>>> GetAllSubdistrict(string CityId)
         {
             var stat = new Status();
-            var resp = new SubdistrictResponse();
-
-            var client = new RestClient("https://dev.farizdotid.com/api/daerahindonesia/kecamatan?id_kota=" + id_kota);
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = client.Execute(request);
-            if (response.IsSuccessful)
+            var resp = new SubDistrictResponse();
+            var result = new SubDistrictListResponse
             {
-                stat.ResponseCode = StatusCodes.Status200OK;
-                stat.ResponseMessage = "Success";
-                resp.Status = stat;
-                resp.Result = JsonConvert.DeserializeObject<SubdistrictListResponse>(response.Content);
-            }
+                SubDistricts = await _context.SubDistricts.Where(x => x.RegencyId == CityId).OrderBy(x => x.Name).ToListAsync()
+            };
+
+            stat.ResponseCode = StatusCodes.Status200OK;
+            stat.ResponseMessage = "Success";
+            resp.Status = stat;
+            resp.Result = result;
 
             return Ok(resp);
         }

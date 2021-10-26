@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wareship.Authentication;
 
 namespace Wareship.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211026145025_tambah_subdistrict")]
+    partial class tambah_subdistrict
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -289,8 +291,8 @@ namespace Wareship.Migrations
                         {
                             Id = "b74ddd14-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "80430a79-e234-41aa-88ce-097a49f318e1",
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 904, DateTimeKind.Local).AddTicks(9294),
+                            ConcurrencyStamp = "e81f2ce4-2463-453d-bf4b-0adfccd3f14d",
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 920, DateTimeKind.Local).AddTicks(6448),
                             Dob = new DateTime(1989, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@example.com",
                             EmailConfirmed = false,
@@ -299,11 +301,11 @@ namespace Wareship.Migrations
                             Name = "Admin Suradmin",
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPndYLUfWuYWWNKRReyr7h/5ns8Oyq7QqXMqPWOPK7DawmnKtFwjFDmYnhrIYhxezA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEODP8v2y2pePlbS4GJj96UxgXJkHKwIEHUlnmJFSAlV1MRSi0Zt6EcxNuVMOQAWcVA==",
                             PhoneNumber = "085223670378",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                            SecurityStamp = "8aee49ff-4682-4836-b696-a6675536f051",
+                            SecurityStamp = "6b1b1d2c-8302-4d8c-a48f-9e4eb692d544",
                             TwoFactorEnabled = false,
                             UserName = "admin",
                             UserStatusId = 1,
@@ -313,8 +315,8 @@ namespace Wareship.Migrations
                         {
                             Id = "supplier-6340-4840-95c2-db12554843e5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4315a720-a821-4490-942a-d245656cf4af",
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 937, DateTimeKind.Local).AddTicks(6594),
+                            ConcurrencyStamp = "e02f2998-1b20-401f-951f-105393567ccd",
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 938, DateTimeKind.Local).AddTicks(4055),
                             Dob = new DateTime(1989, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "supplier@example.com",
                             EmailConfirmed = false,
@@ -323,11 +325,11 @@ namespace Wareship.Migrations
                             Name = "Susu Plier",
                             NormalizedEmail = "SUPPLIER@EXAMPLE.COM",
                             NormalizedUserName = "SUPPLIER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIQDuBKHNTwd8wCmc6TYfe2chhaWlGuBUbh/1oSaEyRRLJQSAbnyEMc6u5eCKWnFfA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGor3tFfMAqRpOr3dV2jJwyt7eZAQyFWxefXGuWWre2Zhl+FpvR1YiXTCPwSfhDAsQ==",
                             PhoneNumber = "085223670378",
                             PhoneNumberConfirmed = false,
                             ProfilePictureUrl = "https://images.pexels.com/photos/6652928/pexels-photo-6652928.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                            SecurityStamp = "6c4b5501-4b1a-41e5-b47b-0f1e58ce2882",
+                            SecurityStamp = "0bdd7b29-b52e-445d-9e84-549f0fc9f0cc",
                             TwoFactorEnabled = false,
                             UserName = "supplier",
                             UserStatusId = 1,
@@ -366,7 +368,7 @@ namespace Wareship.Migrations
                     b.ToTable("Regencies");
                 });
 
-            modelBuilder.Entity("Wareship.Model.Indonesia.SubDistricts", b =>
+            modelBuilder.Entity("Wareship.Model.Indonesia.SubDistrict", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -381,7 +383,7 @@ namespace Wareship.Migrations
 
                     b.HasIndex("RegencyId");
 
-                    b.ToTable("SubDistricts");
+                    b.ToTable("SubDistrict");
                 });
 
             modelBuilder.Entity("Wareship.Model.Products.Category", b =>
@@ -698,70 +700,70 @@ namespace Wareship.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 949, DateTimeKind.Local).AddTicks(9572),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 951, DateTimeKind.Local).AddTicks(7919),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 1
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 950, DateTimeKind.Local).AddTicks(757),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 952, DateTimeKind.Local).AddTicks(489),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 2
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 950, DateTimeKind.Local).AddTicks(764),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 952, DateTimeKind.Local).AddTicks(507),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 3
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 950, DateTimeKind.Local).AddTicks(765),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 952, DateTimeKind.Local).AddTicks(509),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 4
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 950, DateTimeKind.Local).AddTicks(767),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 952, DateTimeKind.Local).AddTicks(511),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 5
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 950, DateTimeKind.Local).AddTicks(771),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 952, DateTimeKind.Local).AddTicks(520),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 6
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 950, DateTimeKind.Local).AddTicks(772),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 952, DateTimeKind.Local).AddTicks(523),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 7
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 950, DateTimeKind.Local).AddTicks(774),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 952, DateTimeKind.Local).AddTicks(524),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 8
                         },
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 950, DateTimeKind.Local).AddTicks(775),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 952, DateTimeKind.Local).AddTicks(526),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 9
                         },
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 950, DateTimeKind.Local).AddTicks(777),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 952, DateTimeKind.Local).AddTicks(529),
                             Filename = "https://images.pexels.com/photos/762687/pexels-photo-762687.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
                             ProductId = 10
                         });
@@ -1642,12 +1644,12 @@ namespace Wareship.Migrations
                             Id = 1,
                             AddressId = 8,
                             Brand = "Amazaki",
-                            CreatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 948, DateTimeKind.Local).AddTicks(97),
+                            CreatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 949, DateTimeKind.Local).AddTicks(5505),
                             CreatedById = "b74ddd14-6340-4840-95c2-db12554843e5",
                             Email = "digisolutionasia@gmail.com",
                             Markup = 20.0,
                             SubCategoryId = 1,
-                            UpdatedAt = new DateTime(2021, 10, 26, 21, 57, 14, 948, DateTimeKind.Local).AddTicks(554),
+                            UpdatedAt = new DateTime(2021, 10, 26, 21, 50, 23, 949, DateTimeKind.Local).AddTicks(5952),
                             UserStatusId = 1
                         });
                 });
@@ -1841,7 +1843,7 @@ namespace Wareship.Migrations
                     b.Navigation("Province");
                 });
 
-            modelBuilder.Entity("Wareship.Model.Indonesia.SubDistricts", b =>
+            modelBuilder.Entity("Wareship.Model.Indonesia.SubDistrict", b =>
                 {
                     b.HasOne("Wareship.Model.Indonesia.Regencies", "Regency")
                         .WithMany("SubDistricts")
