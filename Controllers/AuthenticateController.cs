@@ -224,13 +224,16 @@ namespace Wareship.Controllers
                     }
                 // }
 
+                var provinceName = _context.Provinces.Find(model.ProvinceId).Name;
+                var cityName = _context.Regencies.Find(model.CityId).Name;
+
                 var address = new Address
                 {
                     Name = model.Username,
                     CityId = model.CityId,
-                    City = model.City,
+                    City = cityName,
                     ProvinceId = model.ProvinceId,
-                    Province = model.Province
+                    Province = provinceName
                 };
 
                 _context.Address.Add(address);

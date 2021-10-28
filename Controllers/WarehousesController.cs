@@ -104,18 +104,23 @@ namespace Wareship.Controllers
             try
             {
                 var w = await _context.Warehouse.FindAsync(id);
+
+                var provinceName = _context.Provinces.Find(request.ProvinceId).Name;
+                var cityName = _context.Regencies.Find(request.CityId).Name;
+                var subdistrictName = _context.SubDistricts.Find(request.SubdistrictId).Name;
+
                 var address = new Address
                 {
                     Id = w.AddressId,
                     Name = request.Name,
                     CityId = request.CityId,
-                    City = request.City,
+                    City = cityName,
                     Phone = request.Phone,
                     ProvinceId = request.ProvinceId,
-                    Province = request.Province,
+                    Province = provinceName,
                     Street = request.Street,
                     SubdistrictId = request.SubdistrictId,
-                    Subdistrict = request.Subdistrict,
+                    Subdistrict = subdistrictName,
                     ZipCode = request.ZipCode
                 };
 
@@ -156,17 +161,21 @@ namespace Wareship.Controllers
         {
             if (ModelState.IsValid)
             {
+                var provinceName = _context.Provinces.Find(request.ProvinceId).Name;
+                var cityName = _context.Regencies.Find(request.CityId).Name;
+                var subdistrictName = _context.SubDistricts.Find(request.SubdistrictId).Name;
+
                 var address = new Address
                 {
                     Name = request.Name,
                     CityId = request.CityId,
-                    City = request.City,
+                    City = cityName,
                     Phone = request.Phone,
                     ProvinceId = request.ProvinceId,
-                    Province = request.Province,
+                    Province = provinceName,
                     Street = request.Street,
                     SubdistrictId = request.SubdistrictId,
-                    Subdistrict = request.Subdistrict,
+                    Subdistrict = subdistrictName,
                     ZipCode = request.ZipCode
                 };
 

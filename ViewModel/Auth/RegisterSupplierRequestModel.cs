@@ -30,18 +30,12 @@ namespace Wareship.ViewModel.Auth
         public string PhoneNumber { get; set; }
         [Required(ErrorMessage = "Street is required")]
         public string Street { get; set; }
-        [Required(ErrorMessage = "Subdistrict is required")]
-        public string Subdistrict { get; set; }
         [Required(ErrorMessage = "Subdistrict Id is required")]
-        public int SubdistrictId { get; set; }
+        public string SubdistrictId { get; set; }
         [Required(ErrorMessage = "City Id is required")]
-        public int CityId { get; set; }
-        [Required(ErrorMessage = "City is required")]
-        public string City { get; set; }
+        public string CityId { get; set; }
         [Required(ErrorMessage = "Province Id is required")]
-        public int ProvinceId { get; set; }
-        [Required(ErrorMessage = "Province is required")]
-        public string Province { get; set; }
+        public string ProvinceId { get; set; }
         [Required(ErrorMessage = "Zip Code is required")]
         public int ZipCode { get; set; }
 

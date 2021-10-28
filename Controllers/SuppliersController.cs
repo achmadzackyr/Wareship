@@ -172,18 +172,22 @@ namespace Wareship.Controllers
                 };
                 _context.Entry(supplier).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                
+
+                var provinceName = _context.Provinces.Find(request.ProvinceId).Name;
+                var cityName = _context.Regencies.Find(request.CityId).Name;
+                var subdistrictName = _context.SubDistricts.Find(request.SubdistrictId).Name;
+
                 var address = new Address
                 {
                     Id = checkSupplier.AddressId,
                     Name = request.Name,
                     Phone = request.PhoneNumber,
                     ProvinceId = request.ProvinceId,
-                    Province = request.Province,
+                    Province = provinceName,
                     CityId = request.CityId,
-                    City = request.City,
+                    City = cityName,
                     SubdistrictId = request.SubdistrictId,
-                    Subdistrict = request.Subdistrict,
+                    Subdistrict = subdistrictName,
                     Street = request.Street,
                     ZipCode = request.ZipCode.ToString()
                 };
@@ -265,14 +269,18 @@ namespace Wareship.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, Username);
                 }
 
+                var provinceName = _context.Provinces.Find(req.ProvinceId).Name;
+                var cityName = _context.Regencies.Find(req.CityId).Name;
+                var subdistrictName = _context.SubDistricts.Find(req.SubdistrictId).Name;
+
                 var address = new Address
                 {
                     Name = req.Name,
                     CityId = req.CityId,
-                    City = req.City,
+                    City = cityName,
                     ProvinceId = req.ProvinceId,
-                    Province = req.Province,
-                    Subdistrict = req.Subdistrict,
+                    Province = provinceName,
+                    Subdistrict = subdistrictName,
                     SubdistrictId = req.SubdistrictId,
                     Phone = req.PhoneNumber,
                     Street = req.Street,

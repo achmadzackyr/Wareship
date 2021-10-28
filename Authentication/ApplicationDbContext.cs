@@ -440,11 +440,11 @@ namespace Wareship.Authentication
                     Id = 1,
                     Name = "Admin Suradmin",
                     Street = "Dusun Desa, Desa Cijeungjing",
-                    SubdistrictId = 3207150,
+                    SubdistrictId = "3207150",
                     Subdistrict = "Cijeungjing",
-                    CityId = 3207,
+                    CityId = "3207",
                     City = "Kabupaten Ciamis",
-                    ProvinceId = 32,
+                    ProvinceId = "32",
                     Province = "Jawa Barat",
                     ZipCode = "46271",
                     Phone = "085223670378"
@@ -454,11 +454,11 @@ namespace Wareship.Authentication
                     Id = 2,
                     Name = "Warehouse JNE Tasikmalaya",
                     Street = "Jl. Ir. H. Juanda No.21, RW.1, Cipedes",
-                    SubdistrictId = 3278080,
+                    SubdistrictId = "3278080",
                     Subdistrict = "Cipedes",
-                    CityId = 3278,
+                    CityId = "3278",
                     City = "Kota Tasikmalaya",
-                    ProvinceId = 32,
+                    ProvinceId = "32",
                     Province = "Jawa Barat",
                     ZipCode = "46151",
                     Phone = ""
@@ -468,11 +468,11 @@ namespace Wareship.Authentication
                     Id = 8,
                     Name = "Amazaki",
                     Street = "Dusun Desa, Desa Cijeungjing",
-                    SubdistrictId = 3207150,
+                    SubdistrictId = "3207150",
                     Subdistrict = "Cijeungjing",
-                    CityId = 3207,
+                    CityId = "3207",
                     City = "Kabupaten Ciamis",
-                    ProvinceId = 32,
+                    ProvinceId = "32",
                     Province = "Jawa Barat",
                     ZipCode = "46271",
                     Phone = "085223670378"
@@ -588,6 +588,7 @@ namespace Wareship.Authentication
         public DbSet<Wareship.Model.Indonesia.Provinces> Provinces { get; set; }
         public DbSet<Wareship.Model.Indonesia.Regencies> Regencies { get; set; }
         public DbSet<Wareship.Model.Indonesia.SubDistricts> SubDistricts { get; set; }
+        public DbSet<Wareship.Model.Users.UserStatus> UserStatus { get; set; }
 
     }
 }
