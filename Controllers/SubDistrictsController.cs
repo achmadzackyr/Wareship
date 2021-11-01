@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/SubDistricts
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SubDistricts>>> GetSubDistrict()
         {
@@ -29,6 +31,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/SubDistricts/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<SubDistricts>> GetSubDistrict(string id)
         {
@@ -44,6 +47,7 @@ namespace Wareship.Controllers
 
         // PUT: api/SubDistricts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSubDistrict(string id, SubDistricts subDistrict)
         {
@@ -75,6 +79,7 @@ namespace Wareship.Controllers
 
         // POST: api/SubDistricts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<ActionResult<SubDistricts>> PostSubDistrict(SubDistricts subDistrict)
         {
@@ -99,6 +104,7 @@ namespace Wareship.Controllers
         }
 
         // DELETE: api/SubDistricts/5
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubDistrict(string id)
         {

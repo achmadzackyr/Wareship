@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/Stocks
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Stock>>> GetStock()
         {
@@ -29,6 +31,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/Stocks/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Stock>> GetStock(int id)
         {
@@ -44,6 +47,7 @@ namespace Wareship.Controllers
 
         // PUT: api/Stocks/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStock(int id, Stock stock)
         {
@@ -75,6 +79,7 @@ namespace Wareship.Controllers
 
         // POST: api/Stocks
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<ActionResult<Stock>> PostStock(Stock stock)
         {
@@ -85,6 +90,7 @@ namespace Wareship.Controllers
         }
 
         // DELETE: api/Stocks/5
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStock(int id)
         {

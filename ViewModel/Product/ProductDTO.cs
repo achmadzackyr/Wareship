@@ -21,6 +21,7 @@ namespace Wareship.ViewModel.Product
         public double ChargeableWeight { get; set; }
         public string UserId { get; set; }
         public int ProductStatusId { get; set; }
+        public string ProductStatusName { get; set; }
         public SubCategoryDTO SubCategory { get; set; }
         public List<ProductImageDTO> ProductImages { get; set; }
         public List<StockDTO> Stocks { get; set; }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/UserStatus
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserStatus>>> GetUserStatus()
         {
@@ -29,6 +31,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/UserStatus/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserStatus>> GetUserStatus(int id)
         {
@@ -44,6 +47,7 @@ namespace Wareship.Controllers
 
         // PUT: api/UserStatus/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserStatus(int id, UserStatus userStatus)
         {
@@ -75,6 +79,7 @@ namespace Wareship.Controllers
 
         // POST: api/UserStatus
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<ActionResult<UserStatus>> PostUserStatus(UserStatus userStatus)
         {
@@ -85,6 +90,7 @@ namespace Wareship.Controllers
         }
 
         // DELETE: api/UserStatus/5
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserStatus(int id)
         {

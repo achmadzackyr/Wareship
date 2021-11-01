@@ -26,6 +26,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/Warehouses
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Warehouse>>> GetWarehouse()
         {
@@ -56,6 +57,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/Warehouses/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Warehouse>> GetWarehouse(int id)
         {

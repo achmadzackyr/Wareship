@@ -34,10 +34,15 @@ namespace Wareship.Controllers
         }
 
         // GET: api/Products
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
-            var productList = await _context.Product.Include(p => p.ProductImages).ToListAsync();
+            var productList = await _context.Product
+                .Include(p => p.ProductImages)
+                .Include(p=> p.ProductStatus)
+                .ToListAsync();
+
             var productDTOList = productList.Select(p => new ProductDTO
             {
                 Id = p.Id,
@@ -51,6 +56,7 @@ namespace Wareship.Controllers
                 Weight = p.Weight,
                 UserId = p.UserId,
                 ProductStatusId = p.ProductStatusId,
+                ProductStatusName = p.ProductStatus.Name,
                 ProductImages = p.ProductImages.Select(p => new ProductImageDTO
                 {
                     Id = p.Id,
@@ -66,12 +72,14 @@ namespace Wareship.Controllers
         }
 
         // GET: api/Products/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var p = await _context.Product
                 .Where(p => p.Id == id)
                 .Include(p => p.ProductImages)
+                .Include(p => p.ProductStatus)
                 .Include(p => p.Stocks)
                 .ThenInclude(w => w.Warehouse)
                 .Include(p => p.Stocks)
@@ -113,6 +121,7 @@ namespace Wareship.Controllers
                     //ZipCode = p.User.ZipCode
                 },
                 ProductStatusId = p.ProductStatusId,
+                ProductStatusName = p.ProductStatus.Name,
                 SubCategory = new SubCategoryDTO
                 {
                     Id = p.SubCategory.Id,
@@ -173,7 +182,7 @@ namespace Wareship.Controllers
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [Authorize]
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, [FromForm] ProductRequest request)
         {
@@ -284,6 +293,7 @@ namespace Wareship.Controllers
 
                 var p = await _context.Product
                 .Include(p => p.ProductImages)
+                .Include(p => p.ProductStatus)
                 .Include(p => p.Stocks)
                 .ThenInclude(w => w.Warehouse)
                 .Include(p => p.Stocks)
@@ -325,6 +335,7 @@ namespace Wareship.Controllers
                         //ZipCode = p.User.ZipCode
                     },
                     ProductStatusId = p.ProductStatusId,
+                    ProductStatusName = p.ProductStatus.Name,
                     SubCategory = new SubCategoryDTO
                     {
                         Id = p.SubCategory.Id,
@@ -396,7 +407,7 @@ namespace Wareship.Controllers
 
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [Authorize]
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct([FromForm] ProductRequest request)
         {
@@ -521,7 +532,7 @@ namespace Wareship.Controllers
         }
 
         // DELETE: api/Products/5
-        [Authorize]
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

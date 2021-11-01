@@ -25,6 +25,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/SubCategories
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SubCategory>>> GetSubCategory()
         {
@@ -42,6 +43,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/SubCategories/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<SubCategory>> GetSubCategory(int id)
         {

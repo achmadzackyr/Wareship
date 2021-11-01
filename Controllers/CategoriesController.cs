@@ -25,6 +25,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/Categories
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
         {
@@ -41,6 +42,7 @@ namespace Wareship.Controllers
         }
 
         // GET: api/Categories/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
