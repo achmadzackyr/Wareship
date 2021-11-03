@@ -17,4 +17,11 @@ namespace Wareship.ViewModel.Product
         public Status Status { get; set; }
         public ProductDTO Result { get; set; }
     }
+
+    public class ProductPagingResponse
+    {
+        public Status Status { get; set; }
+        public List<ProductDTO> Result { get; set; }
+        public PagingResponse Paging { get; set; }
+    }
 }

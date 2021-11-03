@@ -41,6 +41,9 @@ namespace Wareship.Controllers
             var productList = await _context.Product
                 .Include(p => p.ProductImages)
                 .Include(p=> p.ProductStatus)
+                .Include(p=> p.Supplier)
+                .Include(p => p.SubCategory)
+                .ThenInclude(s => s.Category)
                 .ToListAsync();
 
             var productDTOList = productList.Select(p => new ProductDTO
@@ -50,13 +53,32 @@ namespace Wareship.Controllers
                 ChargeableWeight = p.ChargeableWeight,
                 Description = p.Description,
                 Price = p.Price,
-                PriceString = "Rp" + p.Price.ToString("N0").Replace(',', '.'),
+                PriceString = "Rp" + (p.Price + (p.Price * p.Supplier.Markup * 0.01)).ToString("N0").Replace(',', '.'),
                 Sku = p.Sku,
                 Volume = p.Volume,
                 Weight = p.Weight,
                 UserId = p.UserId,
                 ProductStatusId = p.ProductStatusId,
                 ProductStatusName = p.ProductStatus.Name,
+                Supplier = new SupplierProductDTO
+                {
+                    Id = p.Supplier.Id,
+                    Brand = p.Supplier.Brand,
+                    Markup = p.Supplier.Markup
+                },
+                SubCategory = new SubCategoryDTO
+                {
+                    Id = p.SubCategory.Id,
+                    Name = p.SubCategory.Name,
+                    ThumbnailUrl = p.SubCategory.ThumbnailUrl,
+                    CategoryId = p.SubCategory.CategoryId,
+                    Category = new CategoryDTO
+                    {
+                        Id = p.SubCategory.Category.Id,
+                        Name = p.SubCategory.Category.Name,
+                        ThumbnailUrl = p.SubCategory.Category.ThumbnailUrl
+                    }
+                },
                 ProductImages = p.ProductImages.Select(p => new ProductImageDTO
                 {
                     Id = p.Id,
@@ -71,6 +93,112 @@ namespace Wareship.Controllers
             return Ok(response);
         }
 
+        [Authorize]
+        [HttpPost("pagination")]
+        public ActionResult<IEnumerable<Product>> GetProductPagination([FromBody] PagingParameterModel paging)
+        {
+            var source = _context.Product
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductStatus)
+                .Include(p => p.Supplier)
+                .Include(p => p.SubCategory)
+                .ThenInclude(s => s.Category)
+                .OrderBy(x => x.Id)
+                .AsQueryable();
+
+            // Get's No of Rows Count   
+            int count = source.Count();
+
+            // Parameter is passed from Query string if it is null then it default Value will be pageNumber:1  
+            int CurrentPage = paging.pageNumber;
+
+            // Parameter is passed from Query string if it is null then it default Value will be pageSize:20  
+            int PageSize = paging.pageSize;
+
+            // Display TotalCount to Records to User  
+            int TotalCount = count;
+
+            // Calculating Totalpage by Dividing (No of Records / Pagesize)  
+            int TotalPages = (int)Math.Ceiling(count / (double)PageSize);
+
+            // Returns List of Product after applying Paging   
+            var items = source.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+
+            // if CurrentPage is greater than 1 means it has previousPage  
+            var previousPage = CurrentPage > 1 ? "Yes" : "No";
+
+            // if TotalPages is greater than CurrentPage means it has nextPage  
+            var nextPage = CurrentPage < TotalPages ? "Yes" : "No";
+
+            // Object which we are going to send in header   
+            //var paginationMetadata = new
+            //{
+            //    totalCount = TotalCount,
+            //    pageSize = PageSize,
+            //    currentPage = CurrentPage,
+            //    totalPages = TotalPages,
+            //    previousPage,
+            //    nextPage
+            //};
+
+            var pagingResponse = new PagingResponse
+            {
+                Page = CurrentPage,
+                Limit = PageSize,
+                TotalPage = TotalPages,
+                TotalRecord = TotalCount
+            };
+
+            // Setting Header  
+            // HttpContext.Current.Response.Headers.Add("Paging-Headers", JsonConvert.SerializeObject(paginationMetadata));
+
+            var productDTOList = items.Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                ChargeableWeight = p.ChargeableWeight,
+                Description = p.Description,
+                Price = p.Price,
+                PriceString = "Rp" + (p.Price + (p.Price * p.Supplier.Markup * 0.01)).ToString("N0").Replace(',', '.'),
+                Sku = p.Sku,
+                Volume = p.Volume,
+                Weight = p.Weight,
+                UserId = p.UserId,
+                ProductStatusId = p.ProductStatusId,
+                ProductStatusName = p.ProductStatus.Name,
+                Supplier = new SupplierProductDTO
+                {
+                    Id = p.Supplier.Id,
+                    Brand = p.Supplier.Brand,
+                    Markup = p.Supplier.Markup
+                },
+                SubCategory = new SubCategoryDTO
+                {
+                    Id = p.SubCategory.Id,
+                    Name = p.SubCategory.Name,
+                    ThumbnailUrl = p.SubCategory.ThumbnailUrl,
+                    CategoryId = p.SubCategory.CategoryId,
+                    Category = new CategoryDTO
+                    {
+                        Id = p.SubCategory.Category.Id,
+                        Name = p.SubCategory.Category.Name,
+                        ThumbnailUrl = p.SubCategory.Category.ThumbnailUrl
+                    }
+                },
+                ProductImages = p.ProductImages.Select(p => new ProductImageDTO
+                {
+                    Id = p.Id,
+                    Filename = p.Filename,
+                    Url = "https://wareship.blob.core.windows.net/images/" + p.Filename,
+                    ProductId = p.ProductId,
+                    CreatedAt = p.CreatedAt
+                }).ToList()
+            }).ToList();
+
+            var response = GeneratePagingResponse(StatusCodes.Status200OK, "Success", productDTOList, pagingResponse);
+            return Ok(response);
+        }
+
         // GET: api/Products/5
         [Authorize]
         [HttpGet("{id}")]
@@ -79,6 +207,7 @@ namespace Wareship.Controllers
             var p = await _context.Product
                 .Where(p => p.Id == id)
                 .Include(p => p.ProductImages)
+                .Include(p => p.Supplier)
                 .Include(p => p.ProductStatus)
                 .Include(p => p.Stocks)
                 .ThenInclude(w => w.Warehouse)
@@ -569,6 +698,21 @@ namespace Wareship.Controllers
 
             resp.Status = stat;
             resp.Result = response;
+
+            return resp;
+        }
+
+        private ProductPagingResponse GeneratePagingResponse(int statusCode, string message, List<ProductDTO> response, PagingResponse paging)
+        {
+            var stat = new Status();
+            var resp = new ProductPagingResponse();
+
+            stat.ResponseCode = statusCode;
+            stat.ResponseMessage = message;
+
+            resp.Status = stat;
+            resp.Result = response;
+            resp.Paging = paging;
 
             return resp;
         }

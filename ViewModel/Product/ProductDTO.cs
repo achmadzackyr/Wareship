@@ -26,6 +26,7 @@ namespace Wareship.ViewModel.Product
         public List<ProductImageDTO> ProductImages { get; set; }
         public List<StockDTO> Stocks { get; set; }
         public UserDTO User { get; set; }
+        public SupplierProductDTO Supplier { get; set; }
 
     }
 
@@ -37,5 +38,12 @@ namespace Wareship.ViewModel.Product
         public DateTime CreatedAt { get; set; }
 
         public int ProductId { get; set; }
+    }
+
+    public class SupplierProductDTO
+    {
+        public int Id { get; set; }
+        public string Brand { get; set; }
+        public double Markup { get; set; }
     }
 }
