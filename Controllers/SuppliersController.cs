@@ -79,6 +79,66 @@ namespace Wareship.Controllers
             return Ok(response);
         }
 
+        [Authorize]
+        [HttpGet("brand")]
+        public async Task<ActionResult<dynamic>> GetSupplierBrandList()
+        {
+            return await _context.Supplier.Select(x => new { x.Id, x.Brand, x.SubCategoryId }).ToListAsync();
+        }
+
+        // GET: api/Suppliers
+        [Authorize]
+        [HttpGet("brand/{brand}")]
+        public async Task<ActionResult<IEnumerable<Supplier>>> GetSupplierByName(string brand)
+        {
+            var s =
+                await _context.Supplier
+                .Where(s => s.Brand == brand)
+                .Include(s => s.Address)
+                .Include(s => s.CreatedBy)
+                .Include(s => s.UserStatus)
+                .Include(s => s.SubCategory)
+                .ThenInclude(s => s.Category)
+                .FirstOrDefaultAsync();
+
+            var supplierDTO = new SupplierDTO
+            {
+                Id = s.Id,
+                Brand = s.Brand,
+                Markup = s.Markup,
+                Email = s.Email,
+                CreatedAt = s.CreatedAt,
+                CreatedAtString = s.CreatedAt.ToString("dd-MM-yyyy"),
+                UpdatedAt = s.UpdatedAt,
+
+                //Address
+                AddressId = s.Address.Id,
+                Name = s.Address.Name,
+                Street = s.Address.Street,
+                Province = s.Address.Province,
+                ProvinceId = s.Address.ProvinceId,
+                City = s.Address.City,
+                CityId = s.Address.CityId,
+                Subdistrict = s.Address.Subdistrict,
+                SubdistrictId = s.Address.SubdistrictId,
+                ZipCode = s.Address.ZipCode,
+                Phone = s.Address.Phone,
+
+                //Relation
+                CategoryId = s.SubCategory.Category.Id,
+                CategoryName = s.SubCategory.Category.Name,
+                SubCategoryId = s.SubCategory.Id,
+                SubCategoryName = s.SubCategory.Name,
+                CreatedById = s.CreatedBy.Id,
+                CreatedByName = s.CreatedBy.Name,
+                UserStatusId = s.UserStatus.Id,
+                UserStatusName = s.UserStatus.Name
+            };
+
+            var response = GenerateResponse(StatusCodes.Status200OK, "Success", supplierDTO);
+            return Ok(response);
+        }
+
         // GET: api/Suppliers/5
         [Authorize]
         [HttpGet("{id}")]
