@@ -45,6 +45,20 @@ namespace Wareship.Controllers
             return variation;
         }
 
+        // GET: api/Variations/5/options
+        [Authorize]
+        [HttpGet("{id}/options")]
+        public async Task<ActionResult<IEnumerable<Option>>> GetVariationOptions(int id)
+        {
+            var options = await _context.Option.Where(v => v.VariationId == id).ToListAsync();
+            if (options == null)
+            {
+                return NotFound();
+            }
+
+            return options;
+        }
+
         // PUT: api/Variations/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = UserRoles.Admin)]
