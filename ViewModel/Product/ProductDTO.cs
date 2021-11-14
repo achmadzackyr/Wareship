@@ -17,6 +17,9 @@ namespace Wareship.ViewModel.Product
         public double Price { get; set; }
         public string PriceString { get; set; }
         public double Weight { get; set; }
+        public double Length { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
         public double Volume { get; set; }
         public double ChargeableWeight { get; set; }
         public string UserId { get; set; }

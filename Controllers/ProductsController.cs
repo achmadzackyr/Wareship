@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wareship.Authentication;
@@ -26,11 +28,13 @@ namespace Wareship.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IBlobService _blobService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public ProductsController(ApplicationDbContext context, IBlobService blobService)
+        public ProductsController(ApplicationDbContext context, IBlobService blobService, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _blobService = blobService;
+            this.userManager = userManager;
         }
 
         // GET: api/Products
@@ -57,6 +61,9 @@ namespace Wareship.Controllers
                 Sku = p.Sku,
                 Volume = p.Volume,
                 Weight = p.Weight,
+                Length = p.Length,
+                Width = p.Width,
+                Height = p.Height,
                 UserId = p.UserId,
                 ProductStatusId = p.ProductStatusId,
                 ProductStatusName = p.ProductStatus.Name,
@@ -163,6 +170,9 @@ namespace Wareship.Controllers
                 Sku = p.Sku,
                 Volume = p.Volume,
                 Weight = p.Weight,
+                Length = p.Length,
+                Width = p.Width,
+                Height = p.Height,
                 UserId = p.UserId,
                 ProductStatusId = p.ProductStatusId,
                 ProductStatusName = p.ProductStatus.Name,
@@ -236,6 +246,9 @@ namespace Wareship.Controllers
                 PriceString = "Rp"+ p.Price.ToString("N0").Replace(',', '.'),
                 Sku = p.Sku,
                 Volume = p.Volume,
+                Length = p.Length,
+                Width = p.Width,
+                Height = p.Height,
                 Weight = p.Weight,
                 UserId = p.UserId,
                 User = new UserDTO
@@ -322,8 +335,24 @@ namespace Wareship.Controllers
 
             try
             {
-                var sekarang = DateTime.Now;
+                string Username = User.FindFirst(ClaimTypes.Name)?.Value;
+                var user = await userManager.FindByNameAsync(Username);
+                if (user == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, Username);
+                }
 
+                var sekarang = DateTime.Now;
+                var volume = (request.Length * request.Width * request.Height) / 6000;
+                double cas = 0.0;
+                if (volume > request.Weight)
+                {
+                    cas = volume;
+                }
+                else
+                {
+                    cas = request.Weight;
+                }
                 var product = new Product
                 {
                     Id = request.Id,
@@ -332,95 +361,105 @@ namespace Wareship.Controllers
                     Description = request.Description,
                     Price = request.Price,
                     Weight = request.Weight,
-                    Volume = request.Volume,
-                    ChargeableWeight = request.ChargeableWeight,
-                    UserId = request.UserId,
+                    Length = request.Length,
+                    Width = request.Width,
+                    Height = request.Height,
+                    Volume = volume,
+                    ChargeableWeight = cas,
+                    UserId = user.Id, //updated by
                     ProductStatusId = request.ProductStatusId,
-                    SubCategoryId = request.SubCategoryId
+                    SubCategoryId = request.SubCategoryId,
+                    SupplierId = request.SupplierId
                 };
 
                 _context.Entry(product).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                if(request.ProductImages.Count() > 0)
+                if(request.ProductImages != null)
                 {
-                    //delete all current image
-                    var currentImageList = await _context
-                        .ProductImage.Where(im => im
-                        .ProductId == product.Id)
-                        .ToListAsync();
-
-                    foreach (var currentImage in currentImageList)
+                    if (request.ProductImages.Count() > 0)
                     {
-                        var del = await _blobService.DeleteBlob(currentImage.Filename, "images");
-                        if(del)
-                        {
-                            _context.ProductImage.Remove(currentImage);
-                            await _context.SaveChangesAsync();
-                        }
-                    }
+                        //delete all current image
+                        var currentImageList = await _context
+                            .ProductImage.Where(im => im
+                            .ProductId == product.Id)
+                            .ToListAsync();
 
-                    //add new image
-                    var i = 1;
-                    foreach (var img in request.ProductImages)
-                    {
-                        var fileName = request.Name.Trim().Replace(" ", "-") + "-" + i + "-" + sekarang.ToString("ddMMyyyyhhmmss") + Path.GetExtension(img.FileName);
-                        var res = await _blobService.UploadBlob(fileName, img, "images");
-                        if (res)
+                        foreach (var currentImage in currentImageList)
                         {
-                            var productImage = new ProductImage
+                            var del = await _blobService.DeleteBlob(currentImage.Filename, "images");
+                            if (del)
                             {
-                                ProductId = product.Id,
-                                CreatedAt = sekarang,
-                                Filename = fileName
-                            };
+                                _context.ProductImage.Remove(currentImage);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
 
-                            _context.ProductImage.Add(productImage);
-                            await _context.SaveChangesAsync();
-                        }
-                        else
+                        //add new image
+                        var i = 1;
+                        foreach (var img in request.ProductImages)
                         {
-                            return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, "Failed to upload images", null));
+                            var fileName = request.Name.Trim().Replace(" ", "-") + "-" + i + "-" + sekarang.ToString("ddMMyyyyhhmmss") + Path.GetExtension(img.FileName);
+                            var res = await _blobService.UploadBlob(fileName, img, "images");
+                            if (res)
+                            {
+                                var productImage = new ProductImage
+                                {
+                                    ProductId = product.Id,
+                                    CreatedAt = sekarang,
+                                    Filename = fileName
+                                };
+
+                                _context.ProductImage.Add(productImage);
+                                await _context.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, "Failed to upload images", null));
+                            }
+                            i++;
                         }
-                        i++;
                     }
                 }
                 
-                if(request.Stocks.Count() > 0)
+                if(request.Stocks != null)
                 {
-                    //delete all current stock
-                    var currentStockList = await _context
-                        .Stock.Where(s => s
-                        .ProductId == product.Id)
-                        .ToListAsync();
-
-                    foreach (var currentStock in currentStockList)
+                    if (request.Stocks.Count() > 0)
                     {
-                        _context.Stock.Remove(currentStock);
-                        await _context.SaveChangesAsync();
-                    }
+                        //delete all current stock
+                        var currentStockList = await _context
+                            .Stock.Where(s => s
+                            .ProductId == product.Id)
+                            .ToListAsync();
 
-                    //add new stock
-                    foreach (var s in request.Stocks)
-                    {
-                        var stock = new Stock
+                        foreach (var currentStock in currentStockList)
                         {
-                            Sku = s.Sku,
-                            Quantity = s.Quantity,
-                            ProductId = product.Id,
-                            OptionId = s.OptionId,
-                            WarehouseId = s.WarehouseId,
-                            CreatedAt = sekarang,
-                            IsTrash = 0
-                        };
+                            _context.Stock.Remove(currentStock);
+                            await _context.SaveChangesAsync();
+                        }
 
-                        _context.Stock.Add(stock);
-                        await _context.SaveChangesAsync();
+                        //add new stock
+                        foreach (var s in request.Stocks)
+                        {
+                            var stock = new Stock
+                            {
+                                Sku = s.Sku,
+                                Quantity = s.Quantity,
+                                ProductId = product.Id,
+                                OptionId = s.OptionId,
+                                WarehouseId = s.WarehouseId,
+                                CreatedAt = sekarang,
+                                IsTrash = 0
+                            };
+
+                            _context.Stock.Add(stock);
+                            await _context.SaveChangesAsync();
+                        }
                     }
                 }
 
-
                 var p = await _context.Product
+                .Include(p => p.Supplier)
                 .Include(p => p.ProductImages)
                 .Include(p => p.ProductStatus)
                 .Include(p => p.Stocks)
@@ -450,18 +489,21 @@ namespace Wareship.Controllers
                     PriceString = "Rp" + p.Price.ToString("N0").Replace(',', '.'),
                     Sku = p.Sku,
                     Volume = p.Volume,
+                    Length = p.Length,
+                    Width = p.Width,
+                    Height = p.Height,
                     Weight = p.Weight,
                     UserId = p.UserId,
+                    Supplier = new SupplierProductDTO
+                    {
+                        Id = p.Supplier.Id,
+                        Brand = p.Supplier.Brand,
+                        Markup = p.Supplier.Markup
+                    },
                     User = new UserDTO
                     {
-                        //City = p.User.City,
                         Name = p.User.Name,
-                        //Phone = p.User.Phone,
                         ProfilePictureUrl = p.User.ProfilePictureUrl,
-                        //Province = p.User.Province,
-                        //Street = p.User.Street,
-                        //Subdistrict = p.User.Subdistrict,
-                        //ZipCode = p.User.ZipCode
                     },
                     ProductStatusId = p.ProductStatusId,
                     ProductStatusName = p.ProductStatus.Name,
@@ -477,16 +519,24 @@ namespace Wareship.Controllers
                             Name = p.SubCategory.Category.Name,
                             ThumbnailUrl = p.SubCategory.Category.ThumbnailUrl
                         }
-                    },
-                    ProductImages = p.ProductImages.Select(p => new ProductImageDTO
+                    }
+                };
+
+                if(p.ProductImages != null)
+                {
+                    productDTO.ProductImages = p.ProductImages.Select(p => new ProductImageDTO
                     {
                         Id = p.Id,
                         Filename = p.Filename,
                         ProductId = p.ProductId,
                         Url = "https://wareship.blob.core.windows.net/images/" + p.Filename,
                         CreatedAt = p.CreatedAt
-                    }).ToList(),
-                    Stocks = p.Stocks.Select(p => new StockDTO
+                    }).ToList();
+                };
+
+                if (p.Stocks != null)
+                {
+                    productDTO.Stocks = p.Stocks.Select(p => new StockDTO
                     {
                         Id = p.Id,
                         Sku = p.Sku,
@@ -507,7 +557,7 @@ namespace Wareship.Controllers
                         Warehouse = new WarehouseDTO
                         {
                             Id = p.Warehouse.Id,
-                            //Name = p.Warehouse.Name,
+                            //Name = p.Warehouse.Name
                             //City = p.Warehouse.City,
                             //Subdistrict = p.Warehouse.Subdistrict,
                             //Phone = p.Warehouse.Phone,
@@ -516,7 +566,7 @@ namespace Wareship.Controllers
                             //ZipCode = p.Warehouse.ZipCode
                         }
                     })
-                    .ToList()
+                    .ToList();
                 };
 
                 return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", productDTO));
@@ -542,33 +592,79 @@ namespace Wareship.Controllers
         {
             if (ModelState.IsValid)
             {
-                var sub = await _context.SubCategory.FindAsync(request.SubCategoryId);
-                if(sub != null)
+                string Username = User.FindFirst(ClaimTypes.Name)?.Value;
+                var user = await userManager.FindByNameAsync(Username);
+                if (user == null)
                 {
-                    var product = new Product
-                    {
-                        Sku = request.Sku,
-                        Name = request.Name,
-                        Description = request.Description,
-                        Price = request.Price,
-                        Weight = request.Weight,
-                        Volume = request.Volume,
-                        ChargeableWeight = request.ChargeableWeight,
-                        UserId = request.UserId,
-                        ProductStatusId = 1,
-                        SubCategoryId = request.SubCategoryId
-                    };
-                    try
-                    {
-                        _context.Product.Add(product);
-                        await _context.SaveChangesAsync();
+                    return StatusCode(StatusCodes.Status500InternalServerError, Username);
+                }
 
-                        //add new image
+                var volume = (request.Length * request.Width * request.Height) / 6000;
+                double cas = 0.0;
+                if(volume > request.Weight)
+                {
+                    cas = volume;
+                } else
+                {
+                    cas = request.Weight;
+                }
+                var product = new Product
+                {
+                    Sku = request.Sku,
+                    Name = request.Name,
+                    Description = request.Description,
+                    Price = request.Price,
+                    Weight = request.Weight,
+                    Length = request.Length,
+                    Width = request.Width,
+                    Height = request.Height,
+                    Volume = volume,
+                    ChargeableWeight = cas,
+                    UserId = user.Id, // created by
+                    ProductStatusId = 1,
+                    SubCategoryId = request.SubCategoryId,
+                    SupplierId = request.SupplierId
+                };
+                try
+                {
+                    _context.Product.Add(product);
+                    await _context.SaveChangesAsync();
+
+                    var sekarang = DateTime.Now;
+
+                    var productDTO = new ProductDTO
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        ChargeableWeight = product.ChargeableWeight,
+                        Description = product.Description,
+                        Price = product.Price,
+                        PriceString = "Rp" + product.Price.ToString("N0").Replace(',', '.'),
+                        Sku = product.Sku,
+                        Volume = product.Volume,
+                        Weight = product.Weight,
+                        Length = product.Length,
+                        Width = product.Width,
+                        Height = product.Height,
+                        UserId = product.UserId,
+                        ProductStatusId = product.ProductStatusId,
+                        SubCategory = new SubCategoryDTO
+                        {
+                            Id = product.SubCategoryId
+                        },
+                        Supplier = new SupplierProductDTO
+                        {
+                            Id = product.SupplierId
+                        }
+                    };
+
+                    //add new image
+                    if (request.ProductImages != null)
+                    {
                         var i = 1;
-                        var sekarang = DateTime.Now;
                         foreach (var img in request.ProductImages)
                         {
-                            var fileName = request.Name.Trim().Replace(" ","-") + "-" + i + "-" + sekarang.ToString("ddMMyyyyhhmmss") + Path.GetExtension(img.FileName);
+                            var fileName = request.Name.Trim().Replace(" ", "-") + "-" + i + "-" + sekarang.ToString("ddMMyyyyhhmmss") + Path.GetExtension(img.FileName);
                             var res = await _blobService.UploadBlob(fileName, img, "images");
                             if (res)
                             {
@@ -589,7 +685,19 @@ namespace Wareship.Controllers
                             i++;
                         }
 
-                        //add stock
+                        productDTO.ProductImages = product.ProductImages.Select(p => new ProductImageDTO
+                        {
+                            Id = p.Id,
+                            Filename = p.Filename,
+                            Url = "https://wareship.blob.core.windows.net/images/" + p.Filename,
+                            ProductId = p.ProductId,
+                            CreatedAt = p.CreatedAt
+                        }).ToList();
+                    }
+
+                    //add stock
+                    if(request.Stocks != null)
+                    {
                         foreach (var s in request.Stocks)
                         {
                             var stock = new Stock
@@ -607,52 +715,25 @@ namespace Wareship.Controllers
                             await _context.SaveChangesAsync();
                         }
 
-                        var productDTO = new ProductDTO
+                        productDTO.Stocks = product.Stocks.Select(s => new StockDTO
                         {
-                            Id = product.Id,
-                            Name = product.Name,
-                            ChargeableWeight = product.ChargeableWeight,
-                            Description = product.Description,
-                            Price = product.Price,
-                            PriceString = "Rp" + product.Price.ToString("N0").Replace(',', '.'),
-                            Sku = product.Sku,
-                            Volume = product.Volume,
-                            Weight = product.Weight,
-                            UserId = product.UserId,
-                            ProductStatusId = product.ProductStatusId,
-                            ProductImages = product.ProductImages.Select(p => new ProductImageDTO
-                            {
-                                Id = p.Id,
-                                Filename = p.Filename,
-                                Url = "https://wareship.blob.core.windows.net/images/" + p.Filename,
-                                ProductId = p.ProductId,
-                                CreatedAt = p.CreatedAt
-                            }).ToList(),
-                            Stocks = product.Stocks.Select(s => new StockDTO
-                            {
-                                Id = s.Id,
-                                Sku = s.Sku,
-                                Quantity = s.Quantity,
-                                ProductId = s.ProductId,
-                                OptionId = s.OptionId,
-                                WarehouseId = s.WarehouseId,
-                                CreatedAt = s.CreatedAt,
-                                IsTrash = s.IsTrash
-                            }).ToList(),
-                        };
+                            Id = s.Id,
+                            Sku = s.Sku,
+                            Quantity = s.Quantity,
+                            ProductId = s.ProductId,
+                            OptionId = s.OptionId,
+                            WarehouseId = s.WarehouseId,
+                            CreatedAt = s.CreatedAt,
+                            IsTrash = s.IsTrash
+                        }).ToList();
+                    }
 
-                        return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", productDTO));
-                    }
-                    catch (Exception ex)
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, ex.Message, null));
-                    }
+                    return Ok(GenerateResponse(StatusCodes.Status200OK, "Success", productDTO));
                 }
-                else
+                catch (Exception ex)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, "SubCategoryId did not exist", null));
+                    return StatusCode(StatusCodes.Status500InternalServerError, GenerateResponse(StatusCodes.Status500InternalServerError, ex.Message, null));
                 }
-
             }
             else
             {
