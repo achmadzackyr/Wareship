@@ -102,7 +102,7 @@ namespace Wareship.Controllers
 
         [Authorize]
         [HttpPost("pagination")]
-        public ActionResult<IEnumerable<Product>> GetProductPagination([FromBody] PagingParameterModel paging)
+        public ActionResult<IEnumerable<Product>> GetProductPagination([FromBody] ProductPaginationModel param)
         {
             var source = _context.Product
                 .Include(p => p.ProductImages)
@@ -113,14 +113,70 @@ namespace Wareship.Controllers
                 .OrderBy(x => x.Id)
                 .AsQueryable();
 
+            if(param.Parameter != null)
+            {
+                // Search & filtering
+                if (param.Parameter.Filter != null)
+                {
+                    if (param.Parameter.Filter.Sku != null && param.Parameter.Filter.Sku != "")
+                    {
+                        source = source.Where(x => x.Sku.Contains(param.Parameter.Filter.Sku));
+                    }
+                    if (param.Parameter.Filter.Name != null && param.Parameter.Filter.Name != "")
+                    {
+                        source = source.Where(x => x.Name.Contains(param.Parameter.Filter.Name));
+                    }
+                    if (param.Parameter.Filter.Brand != null && param.Parameter.Filter.Brand != "")
+                    {
+                        source = source.Where(x => x.Supplier.Brand.Contains(param.Parameter.Filter.Brand));
+                    }
+                    if (param.Parameter.Filter.CategoryId != 0)
+                    {
+                        source = source.Where(x => x.SubCategory.CategoryId == param.Parameter.Filter.CategoryId);
+                    }
+                    if (param.Parameter.Filter.SubCategoryId != 0)
+                    {
+                        source = source.Where(x => x.SubCategoryId == param.Parameter.Filter.SubCategoryId);
+                    }
+                    if (param.Parameter.Filter.ProductStatusId != 0)
+                    {
+                        source = source.Where(x => x.ProductStatusId == param.Parameter.Filter.ProductStatusId);
+                    }
+                    if (param.Parameter.Filter.PriceFrom != 0)
+                    {
+                        source = source.Where(x => x.Price >= param.Parameter.Filter.PriceFrom);
+                    }
+                    if (param.Parameter.Filter.PriceTo != 0)
+                    {
+                        source = source.Where(x => x.Price <= param.Parameter.Filter.PriceTo);
+                    }
+                }
+
+                // Ordering
+                if (param.Parameter.Sort != null)
+                {
+                    if (param.Parameter.Sort.Price != null && param.Parameter.Sort.Price != "")
+                    {
+                        if (param.Parameter.Sort.Price == "ASC")
+                        {
+                            source = source.OrderBy(x => x.Price);
+                        }
+                        else
+                        {
+                            source = source.OrderByDescending(x => x.Price);
+                        }
+                    }
+                }
+            }
+
             // Get's No of Rows Count   
             int count = source.Count();
 
             // Parameter is passed from Query string if it is null then it default Value will be pageNumber:1  
-            int CurrentPage = paging.pageNumber;
+            int CurrentPage = param.Paging.pageNumber;
 
             // Parameter is passed from Query string if it is null then it default Value will be pageSize:20  
-            int PageSize = paging.pageSize;
+            int PageSize = param.Paging.pageSize;
 
             // Display TotalCount to Records to User  
             int TotalCount = count;
