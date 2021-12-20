@@ -166,6 +166,17 @@ namespace Wareship.Controllers
                             source = source.OrderByDescending(x => x.Price);
                         }
                     }
+                    if (param.Parameter.Sort.CreatedAt != null && param.Parameter.Sort.CreatedAt != "")
+                    {
+                        if (param.Parameter.Sort.CreatedAt == "ASC")
+                        {
+                            source = source.OrderBy(x => x.CreatedAt);
+                        }
+                        else
+                        {
+                            source = source.OrderByDescending(x => x.CreatedAt);
+                        }
+                    }
                 }
             }
 
@@ -258,7 +269,9 @@ namespace Wareship.Controllers
                     Url = "https://wareship.blob.core.windows.net/images/" + p.Filename,
                     ProductId = p.ProductId,
                     CreatedAt = p.CreatedAt
-                }).ToList()
+                }).ToList(),
+                CreatedAt = p.CreatedAt,
+                UpdatedAt = p.UpdatedAt
             }).ToList();
 
             var response = GeneratePagingResponse(StatusCodes.Status200OK, "Success", productDTOList, pagingResponse);
@@ -307,6 +320,10 @@ namespace Wareship.Controllers
                 Height = p.Height,
                 Weight = p.Weight,
                 UserId = p.UserId,
+                CreatedAt = p.CreatedAt,
+                CreatedAtString = p.CreatedAt.ToString("dddd, dd-MMM-yyyy HH:mm:ss"),
+                UpdatedAt = p.UpdatedAt,
+                UpdatedAtString = p.UpdatedAt.ToString("dddd, dd-MMM-yyyy HH:mm:ss"),
                 User = new UserDTO
                 {
                     //City = p.User.City,
@@ -425,7 +442,8 @@ namespace Wareship.Controllers
                     UserId = user.Id, //updated by
                     ProductStatusId = request.ProductStatusId,
                     SubCategoryId = request.SubCategoryId,
-                    SupplierId = request.SupplierId
+                    SupplierId = request.SupplierId,
+                    UpdatedAt = DateTime.Now
                 };
 
                 _context.Entry(product).State = EntityState.Modified;
@@ -550,6 +568,8 @@ namespace Wareship.Controllers
                     Height = p.Height,
                     Weight = p.Weight,
                     UserId = p.UserId,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt,
                     Supplier = new SupplierProductDTO
                     {
                         Id = p.Supplier.Id,
@@ -679,7 +699,9 @@ namespace Wareship.Controllers
                     UserId = user.Id, // created by
                     ProductStatusId = 1,
                     SubCategoryId = request.SubCategoryId,
-                    SupplierId = request.SupplierId
+                    SupplierId = request.SupplierId,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
                 };
                 try
                 {
@@ -711,7 +733,9 @@ namespace Wareship.Controllers
                         Supplier = new SupplierProductDTO
                         {
                             Id = product.SupplierId
-                        }
+                        },
+                        CreatedAt = product.CreatedAt,
+                        UpdatedAt = product.UpdatedAt
                     };
 
                     //add new image

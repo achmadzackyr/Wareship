@@ -22,6 +22,10 @@ namespace Wareship.ViewModel.Product
         public double Height { get; set; }
         public double Volume { get; set; }
         public double ChargeableWeight { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public string CreatedAtString { get; set; }
+        public string UpdatedAtString { get; set; }
         public string UserId { get; set; }
         public int ProductStatusId { get; set; }
         public string ProductStatusName { get; set; }

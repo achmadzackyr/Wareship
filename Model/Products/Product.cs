@@ -22,6 +22,8 @@ namespace Wareship.Model.Products
         public double Height { get; set; }
         public double Volume { get; set; }
         public double ChargeableWeight { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         //Relationship
         public string UserId { get; set; }

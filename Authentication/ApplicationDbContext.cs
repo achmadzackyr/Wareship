@@ -329,7 +329,9 @@ namespace Wareship.Authentication
                     UserId = "b74ddd14-6340-4840-95c2-db12554843e5",
                     Volume = 1,
                     Weight = 1,
-                    ChargeableWeight = 1
+                    ChargeableWeight = 1,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
                 };
                 productSeedList.Add(productSeed);
             }

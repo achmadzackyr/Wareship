@@ -34,6 +34,7 @@ namespace Wareship.ViewModel.Product
     public class ProductSort
     {
         public string Price { get; set; }
+        public string CreatedAt { get; set; }
     }
 }
 
