@@ -105,15 +105,15 @@ namespace Wareship.Controllers
         public ActionResult<IEnumerable<Product>> GetProductPagination([FromBody] ProductPaginationModel param)
         {
             var source = _context.Product
-                .Include(p => p.ProductImages)
+                .OrderByDescending(x => x.Id)
+                .AsQueryable();
+            source = source.Include(p => p.ProductImages)
                 .Include(p => p.ProductStatus)
                 .Include(p => p.Supplier)
                 .Include(p => p.SubCategory)
-                .ThenInclude(s => s.Category)
-                .OrderBy(x => x.Id)
-                .AsQueryable();
+                .ThenInclude(s => s.Category);
 
-            if(param.Parameter != null)
+            if (param.Parameter != null)
             {
                 // Search & filtering
                 if (param.Parameter.Filter != null)
@@ -170,11 +170,13 @@ namespace Wareship.Controllers
                     {
                         if (param.Parameter.Sort.CreatedAt == "ASC")
                         {
-                            source = source.OrderBy(x => x.CreatedAt);
+                            // source = source.OrderBy(x => x.CreatedAt);
+                            source = source.OrderBy(x => x.Id);
                         }
                         else
                         {
-                            source = source.OrderByDescending(x => x.CreatedAt);
+                            // source = source.OrderByDescending(x => x.CreatedAt);
+                            source = source.OrderByDescending(x => x.Id);
                         }
                     }
                 }
@@ -660,6 +662,24 @@ namespace Wareship.Controllers
             }
         }
 
+        private static double Bulatkan(double angka)
+        {
+            var result = Math.Floor(angka);
+            if (result < 1)
+            {
+                result += 1;
+            }
+            else
+            {
+                var dec = angka % 1;
+                if (dec > 0.300001)
+                {
+                    result += 1;
+                }
+            }
+            return result;
+        }
+
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = UserRoles.Admin)]
@@ -675,14 +695,15 @@ namespace Wareship.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, Username);
                 }
 
-                var volume = (request.Length * request.Width * request.Height) / 6000;
+                var volume = Bulatkan((request.Length * request.Width * request.Height) / 6000);
+                var gross = Bulatkan(request.Weight);
                 double cas = 0.0;
-                if(volume > request.Weight)
+                if(volume > gross )
                 {
                     cas = volume;
                 } else
                 {
-                    cas = request.Weight;
+                    cas = gross;
                 }
                 var product = new Product
                 {
